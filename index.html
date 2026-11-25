@@ -257,6 +257,35 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .prow b{ font-weight:500; font-size:.92rem; }
 .prow span.d{ margin-left:auto; font-family:var(--mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--violet); }
 .prow.accent{ border-color:rgba(89,230,255,.42); box-shadow:0 0 0 1px rgba(89,230,255,.10) inset, 0 18px 40px -30px rgba(89,230,255,.8); }
+/* product deep dives ---------------------------------------------- */
+.prod{ display:grid; grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr); gap:clamp(24px,4vw,58px); align-items:center; }
+@media (max-width:940px){ .prod{ grid-template-columns:1fr; } }
+.prod-head{ display:flex; align-items:center; gap:16px; }
+.prod-logo{ width:60px; height:60px; object-fit:contain; filter:drop-shadow(0 8px 24px rgba(255,138,76,.35)); }
+.prod-name{ font-family:var(--display); font-size:1.5rem; letter-spacing:-.02em; line-height:1.1; }
+.prod-kind{ font-family:var(--mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
+.feat{ display:grid; grid-template-columns:1fr 1fr; gap:16px 22px; margin-top:28px; }
+@media (max-width:560px){ .feat{ grid-template-columns:1fr; } }
+.feat .f{ border-top:1px solid rgba(168,140,255,.16); padding-top:12px; }
+.feat .f b{ display:block; font-weight:500; font-size:.93rem; letter-spacing:-.01em; }
+.feat .f span{ display:block; margin-top:4px; color:var(--muted); font-size:.83rem; line-height:1.5; }
+.intg{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-top:26px; }
+.intg .lbl{ font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2); }
+.intg img{ height:22px; width:auto; opacity:.9; transition:opacity .2s, transform .2s; }
+.intg img:hover{ opacity:1; transform:translateY(-1px); }
+.shot{ border:1px solid var(--hairline); border-radius:var(--r-md); overflow:hidden; background:#0a0921; box-shadow:var(--shadow-lift); }
+.shot-bar{ height:30px; display:flex; align-items:center; gap:6px; padding:0 12px; border-bottom:1px solid rgba(168,140,255,.16); background:rgba(255,255,255,.03); }
+.shot-bar i{ width:7px; height:7px; border-radius:50%; background:rgba(168,140,255,.3); }
+.shot-bar span{ margin-left:8px; font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; color:var(--muted-2); text-transform:uppercase; }
+.shot img{ display:block; width:100%; height:auto; }
+.shot-cap{ margin-top:10px; font-family:var(--mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted-2); }
+.panelrows{ display:grid; gap:0; border:1px solid var(--hairline); border-radius:var(--r-md); background:linear-gradient(180deg, rgba(24,15,58,.6), rgba(8,7,28,.6)); overflow:hidden; }
+.panelrow{ display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-bottom:1px solid rgba(168,140,255,.12); }
+.panelrow:last-child{ border-bottom:0; }
+.panelrow b{ font-weight:500; font-size:.9rem; flex:0 0 40%; }
+.panelrow span{ font-size:.84rem; color:var(--muted); }
+.panelrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--violet); margin-top:8px; flex:0 0 auto; box-shadow:0 0 10px var(--violet); }
+
 /* how (timeline) -------------------------------------------------- */
 .flow{ position:relative; display:grid; gap:0; margin-top:8px; }
 .flow::before{
@@ -421,22 +450,14 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top" aria-label="Torchline Cloud home">
-      <svg width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="fl" x1="13" y1="0" x2="13" y2="30" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFD9B8"/><stop offset=".34" stop-color="#FF8A4C"/>
-            <stop offset=".68" stop-color="#FF53D6"/><stop offset="1" stop-color="#9A6CFF"/>
-          </linearGradient>
-        </defs>
-        <path d="M13 0.8c3.6 5.2 8.2 8.3 8.2 14.4 0 5.2-3.5 9.3-8.2 12-4.7-2.7-8.2-6.8-8.2-12C4.8 9.1 9.4 6 13 .8Z" stroke="url(#fl)" stroke-width="1.5" fill="rgba(255,138,76,.08)"/>
-        <path d="M13 8.4c1.9 2.7 4.1 4.3 4.1 7.4 0 2.6-1.7 4.7-4.1 6-2.4-1.3-4.1-3.4-4.1-6 0-3.1 2.2-4.7 4.1-7.4Z" fill="url(#fl)" opacity=".85"/>
-      </svg>
+      <img src="assets/torchflow-emblem.png" alt="" width="26" height="26" style="filter:drop-shadow(0 0 10px rgba(255,138,76,.45))">
       <span class="brand-name">Torchline <span>Cloud</span></span>
     </a>
     <nav class="navlinks" aria-label="Sections">
       <a href="#bundle">Bundle</a>
       <a href="#build">Build</a>
-      <a href="#how">How it works</a>
+      <a href="#torchflow">Torchflow</a>
+      <a href="#hermes">Agents</a>
       <a href="#catalog">Catalog</a>
       <a href="#pricing">Pricing</a>
       <a href="#partners">Partners</a>
@@ -514,7 +535,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <span class="tag">build · no code</span>
           <p>Describe the app you need in plain English, or start from a template. Torchflow assembles it —
             dashboards, forms, Telegram bots, internal tools — and deploys straight to your instance.</p>
-          <span class="incl">included</span>
+          <span class="incl">included · <a href="#torchflow" style="color:var(--cyan)">details ↓</a></span>
         </div>
 
         <div class="bcard" style="--em:var(--violet)">
@@ -524,7 +545,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <span class="tag">operate · on your instance</span>
           <p>An agent team that watches the instance, answers on your own AI credit, drafts the replies, files
             the tickets — and can be pointed at your data instead of ours.</p>
-          <span class="incl">included</span>
+          <span class="incl">included · <a href="#hermes" style="color:var(--cyan)">details ↓</a></span>
         </div>
 
         <div class="bcard" style="--em:var(--cyan)">
@@ -588,6 +609,125 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <div class="prow"><span class="n">02</span><b>Preview on a staging URL</b><span class="d">review</span></div>
           <div class="prow accent"><span class="n">03</span><b>Deploy to Torchline Cloud</b><span class="d">live</span></div>
           <div class="prow"><span class="n">04</span><b>Domain, database, backups, agents</b><span class="d">automatic</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TORCHFLOW DEEP -->
+  <section id="torchflow">
+    <div class="wrap">
+      <div class="prod">
+        <div>
+          <div class="prod-head">
+            <img class="prod-logo" src="assets/torchflow-emblem.png" alt="Torchflow" width="60" height="60">
+            <div>
+              <div class="prod-name">Torchflow</div>
+              <div class="prod-kind">The builder · prompt to production</div>
+            </div>
+          </div>
+          <h2 style="margin-top:22px; font-size:clamp(1.6rem,2.4vw,2.1rem)">Describe the app. It plans it,
+            designs it, ships it.</h2>
+          <p class="lede" style="margin-top:16px; font-size:1rem">
+            Torchflow is our no-code builder. You write what you want in a sentence, and it returns a working
+            product — not a mockup. Screens, database, logic, and the deploy. Build a client portal, an
+            internal dashboard, an invoice tracker, a Telegram bot, or a storefront; keep the source code
+            either way.</p>
+
+          <div class="feat">
+            <div class="f"><b>Every model, routed</b><span>Hundreds of models through OpenRouter — flagship
+              reasoning when the job is hard, cheap and fast when it isn't. You don't pick per task; it does.</span></div>
+            <div class="f"><b>A database, zero setup</b><span>Every project gets collections, records and a
+              visual CRUD studio. No external service to wire up, no schema to write by hand.</span></div>
+            <div class="f"><b>Real integrations</b><span>GitHub, Figma, Supabase, Airtable, Google and Stripe
+              connect to the build, so the app works with the tools you already pay for.</span></div>
+            <div class="f"><b>The code is yours</b><span>Full source export on every plan. Generated with
+              Torchflow, owned by you, portable off the platform whenever you want.</span></div>
+            <div class="f"><b>One-click to your instance</b><span>Preview on a staging URL, then deploy straight
+              onto your Torchline Cloud box — database, domain, TLS and backups already in place.</span></div>
+            <div class="f"><b>Built for non-developers</b><span>No terminal, no package manager, no repo to
+              babysit. If you can describe the workflow, you can ship it.</span></div>
+          </div>
+
+          <div class="intg">
+            <span class="lbl">Integrates with</span>
+            <img src="assets/integrations/github.svg" alt="GitHub" height="20">
+            <img src="assets/integrations/figma.svg" alt="Figma" height="20">
+            <img src="assets/integrations/supabase.svg" alt="Supabase" height="20">
+            <img src="assets/integrations/airtable.svg" alt="Airtable" height="20">
+            <img src="assets/integrations/google.svg" alt="Google" height="20">
+            <img src="assets/integrations/stripe.svg" alt="Stripe" height="20">
+          </div>
+
+          <div class="cta-row" style="margin-top:28px">
+            <a class="btn btn-ghost" href="https://torchflow.ai" target="_blank" rel="noopener">See Torchflow →</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="shot">
+            <div class="shot-bar"><i></i><i></i><i></i><span>coppertrail.coffee — built with Torchflow</span></div>
+            <img src="assets/showcase/copper_trail.png" alt="A coffee brand site built with Torchflow" loading="lazy">
+          </div>
+          <div class="shot-cap">A real brand site, shipped from a prompt</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERMES DEEP -->
+  <section id="hermes">
+    <div class="wrap">
+      <div class="prod">
+        <div>
+          <span class="eyebrow">A day in the life</span>
+          <h3 style="margin:14px 0 18px; font-size:1.15rem; letter-spacing:-.01em">Five jobs it already does
+            for our own companies</h3>
+          <div class="panelrows">
+            <div class="panelrow"><span class="dot"></span><b>Inbox triage</b><span>Sorts the morning mail, drafts the replies, escalates only what needs you.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Watch anything</b><span>Prices, competitors, breach lists, keywords — a digest when something actually moves.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Ops reports</b><span>Nightly numbers from your apps and database, written up before you wake.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Social &amp; support</b><span>Drafts posts, answers the helpdesk, files the ticket when it can't.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Build work</b><span>Small code and config changes, run against the box, with a review step.</span></div>
+          </div>
+          <div class="shot-cap" style="margin-top:10px">The work we already run our own companies on</div>
+        </div>
+
+        <div>
+          <div class="prod-head">
+            <span class="em" style="--em:var(--violet); width:60px; height:60px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(168,140,255,.3); color:var(--violet); background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 30px -10px var(--violet)">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg>
+            </span>
+            <div>
+              <div class="prod-name">Hermes agents</div>
+              <div class="prod-kind">The operator · on your instance</div>
+            </div>
+          </div>
+          <h2 style="margin-top:22px; font-size:clamp(1.6rem,2.4vw,2.1rem)">Staff that don't sleep,<br>running on your box.</h2>
+          <p class="lede" style="margin-top:16px; font-size:1rem">
+            Every instance comes with an agent team. Not a chatbot in a sidebar — an operator with tools,
+            memory and a schedule. It reads your mail, watches your sites, drafts your replies, answers on
+            your helpdesk and files the ticket when it can't finish. It runs on your instance, against your
+            data, on your AI credit.</p>
+
+          <div class="feat">
+            <div class="f"><b>Actually does the work</b><span>Browses, runs commands, reads and writes files,
+              sends mail, calls APIs. Not a chat window — a worker.</span></div>
+            <div class="f"><b>Remembers</b><span>Persistent memory across sessions, so it stops asking the same
+              question every Monday morning.</span></div>
+            <div class="f"><b>Runs on a schedule</b><span>Cron, webhooks or on demand. Most of the value is the
+              thing that happens at 6am without anyone opening a tab.</span></div>
+            <div class="f"><b>Your data stays put</b><span>Runs on your instance, pointed at your database and
+              your files. We don't get a copy.</span></div>
+            <div class="f"><b>Any model, your key</b><span>Routes through OpenRouter — our credit or your own
+              key. Switch models per job without rewriting anything.</span></div>
+            <div class="f"><b>Asks before it acts</b><span>Approval gates on anything destructive or public.
+              Autonomy you can dial, not a switch.</span></div>
+          </div>
+
+          <p class="note" style="margin-top:24px">This is the same agent stack we run our own companies on —
+            mail triage, competitor watching, support, publishing, security intel. You're getting the working
+            version, not a demo.</p>
         </div>
       </div>
     </div>
@@ -983,7 +1123,8 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
         <b>Platform</b>
         <a href="#bundle">The bundle</a>
         <a href="#build">Build without code</a>
-        <a href="#how">How it works</a>
+        <a href="#torchflow">Torchflow</a>
+        <a href="#hermes">Hermes agents</a>
         <a href="#catalog">Catalog</a>
         <a href="#pricing">Pricing</a>
       </div>
