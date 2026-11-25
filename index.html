@@ -34,6 +34,9 @@
   --cyan:        #59e6ff;
   --violet:      #9a6cff;
   --magenta:     #ff53d6;
+  --ok:          #4ce6a4;
+  --ok-glow:     rgba(76,230,164,.28);
+  --grid:        rgba(168,140,255,.055);
   --ember:       #ff8a4c;
   --cyan-dim:    rgba(89,230,255,.16);
   --violet-dim:  rgba(154,108,255,.16);
@@ -84,6 +87,15 @@ body{
     radial-gradient(1000px 700px at 12% 4%, rgba(154,108,255,.20), transparent 60%),
     radial-gradient(1200px 900px at 50% 108%, rgba(89,230,255,.10), transparent 64%),
     linear-gradient(180deg, var(--deep) 0%, var(--void) 34%, var(--plum) 78%, #0b0626 100%);
+}
+.gridtex{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 130% 95% at 50% -10%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+  mask-image:radial-gradient(ellipse 130% 95% at 50% -10%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
 }
 .grain{
   position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
@@ -257,6 +269,71 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .prow b{ font-weight:500; font-size:.92rem; }
 .prow span.d{ margin-left:auto; font-family:var(--mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--violet); }
 .prow.accent{ border-color:rgba(89,230,255,.42); box-shadow:0 0 0 1px rgba(89,230,255,.10) inset, 0 18px 40px -30px rgba(89,230,255,.8); }
+/* included grid ---------------------------------------------------- */
+.incgrid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+@media (max-width:980px){ .incgrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:620px){ .incgrid{ grid-template-columns:1fr; } }
+.inc{
+  position:relative; padding:20px 18px 18px; border-radius:var(--r-md);
+  border:1px solid rgba(168,140,255,.16);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.008));
+  transition:border-color .22s, box-shadow .22s, transform .22s;
+}
+.inc:hover{ border-color:rgba(76,230,164,.45); box-shadow:0 0 0 1px rgba(76,230,164,.10) inset, 0 18px 40px -34px rgba(76,230,164,.9); transform:translateY(-2px); }
+.inc .chk{
+  width:30px; height:30px; border-radius:50%; display:grid; place-items:center; margin-bottom:14px;
+  color:var(--ok); background:rgba(76,230,164,.14); border:1px solid rgba(76,230,164,.5);
+  box-shadow:0 0 20px -6px var(--ok-glow);
+}
+.inc b{ display:block; font-family:var(--display); font-weight:600; font-size:1.02rem; letter-spacing:-.01em; }
+.inc p{ margin-top:7px; font-size:.855rem; line-height:1.55; color:var(--muted); }
+.inc .tagx{ display:block; margin-top:12px; font-family:var(--mono); font-size:.56rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ok); opacity:.85; }
+
+/* security block --------------------------------------------------- */
+.sec{
+  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr); gap:clamp(20px,3.4vw,44px);
+  align-items:center; margin-top:16px; padding:clamp(22px,3vw,34px);
+  border:1px solid rgba(76,230,164,.24); border-radius:var(--r-xl);
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(76,230,164,.10), transparent 55%),
+    linear-gradient(180deg, rgba(24,15,58,.66), rgba(8,7,28,.7));
+}
+@media (max-width:900px){ .sec{ grid-template-columns:1fr; } }
+.sec .eyebrow{ color:var(--ok); }
+.sec .eyebrow::before{ background:linear-gradient(90deg,var(--ok),transparent); }
+
+.slides{ position:relative; border:1px solid rgba(168,140,255,.20); border-radius:var(--r-lg); overflow:hidden; background:linear-gradient(160deg, rgba(30,18,70,.9), rgba(7,6,24,.95)); min-height:296px; }
+.slide{ position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:30px 26px 54px; opacity:0; transition:opacity .55s ease; }
+.slide.on{ opacity:1; }
+.slide .lg{ height:52px; margin-bottom:18px; filter:brightness(0) invert(1); opacity:.92; }
+.slide .lgs{ display:flex; gap:18px; align-items:center; justify-content:center; margin-bottom:18px; }
+.slide .lgs img{ height:44px; filter:brightness(0) invert(1); opacity:.92; }
+.slide h4{ font-family:var(--display); font-size:1.05rem; font-weight:600; letter-spacing:-.01em; }
+.slide p{ margin-top:8px; font-size:.85rem; color:var(--muted); max-width:34ch; }
+.slide .diff{
+  width:100%; text-align:left; font-family:var(--mono); font-size:.68rem; line-height:1.7;
+  border:1px solid rgba(168,140,255,.2); border-radius:10px; overflow:hidden; background:rgba(5,4,18,.7);
+}
+.slide .diff div{ padding:2px 12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.slide .diff .add{ background:rgba(76,230,164,.10); color:#a9f5cd; }
+.slide .diff .del{ background:rgba(255,83,214,.10); color:#ffb0ea; }
+.slide .diff .hd{ color:var(--muted-2); border-bottom:1px solid rgba(168,140,255,.16); }
+.dots{ position:absolute; left:0; right:0; bottom:16px; display:flex; gap:7px; justify-content:center; z-index:2; }
+.dots button{
+  width:7px; height:7px; padding:0; border-radius:50%; border:0; cursor:pointer;
+  background:rgba(168,140,255,.35); transition:background .2s, transform .2s;
+}
+.dots button.on{ background:var(--ok); transform:scale(1.3); box-shadow:0 0 10px var(--ok-glow); }
+
+/* catalog ---------------------------------------------------------- */
+.catlabel{ display:flex; align-items:center; gap:12px; margin:26px 0 14px; font-family:var(--mono); font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted-2); }
+.catlabel::after{ content:""; flex:1; height:1px; background:linear-gradient(90deg, rgba(168,140,255,.22), transparent); }
+.app img{ width:22px; height:22px; filter:brightness(0) invert(1); opacity:.9; }
+.app .mk{ width:22px; height:22px; border-radius:6px; display:grid; place-items:center; font-family:var(--mono); font-size:.6rem; background:linear-gradient(145deg, rgba(89,230,255,.3), rgba(255,83,214,.28)); }
+.conn{ display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px; }
+.conn .c{ display:flex; align-items:center; gap:11px; padding:12px 14px; border:1px solid rgba(168,140,255,.14); border-radius:var(--r-md); background:rgba(255,255,255,.02); font-size:.86rem; }
+.conn .c img{ width:20px; height:20px; filter:brightness(0) invert(1); opacity:.85; }
+
 /* product deep dives ---------------------------------------------- */
 .prod{ display:grid; grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr); gap:clamp(24px,4vw,58px); align-items:center; }
 @media (max-width:940px){ .prod{ grid-template-columns:1fr; } }
@@ -271,7 +348,7 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .feat .f span{ display:block; margin-top:4px; color:var(--muted); font-size:.83rem; line-height:1.5; }
 .intg{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-top:26px; }
 .intg .lbl{ font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2); }
-.intg img{ height:22px; width:auto; opacity:.9; transition:opacity .2s, transform .2s; }
+.intg img{ height:22px; width:auto; filter:brightness(0) invert(1); opacity:.85; transition:opacity .2s, transform .2s; }
 .intg img:hover{ opacity:1; transform:translateY(-1px); }
 .shot{ border:1px solid var(--hairline); border-radius:var(--r-md); overflow:hidden; background:#0a0921; box-shadow:var(--shadow-lift); }
 .shot-bar{ height:30px; display:flex; align-items:center; gap:6px; padding:0 12px; border-bottom:1px solid rgba(168,140,255,.16); background:rgba(255,255,255,.03); }
@@ -332,8 +409,8 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .app:hover{ border-color:var(--hairline-2); background:rgba(154,108,255,.07); transform:translateY(-1px); }
 .app .mark{ width:26px; height:26px; border-radius:7px; flex:0 0 auto; display:grid; place-items:center;
   background:linear-gradient(145deg, rgba(89,230,255,.24), rgba(255,83,214,.22)); font-family:var(--mono); font-size:.72rem; color:#fff; }
-.app .nm{ font-size:.9rem; }
-.app .tier{ margin-left:auto; font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); }
+.app .nm{ font-size:.88rem; flex:1; min-width:0; }
+.app .tier{ margin-left:auto; flex:0 0 auto; white-space:nowrap; font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); }
 .app.gated .tier{ color:var(--violet); }
 
 /* pricing --------------------------------------------------------- */
@@ -424,6 +501,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 @media (max-width: 700px){
   .wrap{ width:min(100% - 34px, var(--maxw)); }
   .brand-name span{ display:none; }
+  header{ background:rgba(6,7,32,.95); }
   .nav{ height:62px; gap:12px; }
   .nav > .btn{ min-height:40px; padding:0 16px; font-size:.85rem; }
   .pipe{ display:none; }
@@ -445,12 +523,23 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 </head>
 <body>
 <div class="field"></div>
+<div class="gridtex"></div>
 <div class="grain"></div>
 
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top" aria-label="Torchline Cloud home">
-      <img src="assets/torchflow-emblem.png" alt="" width="26" height="26" style="filter:drop-shadow(0 0 10px rgba(255,138,76,.45))">
+      <svg width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="tfg" x1="13" y1="0" x2="13" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#59E6FF"/><stop offset=".40" stop-color="#9A6CFF"/>
+            <stop offset=".72" stop-color="#FF53D6"/><stop offset="1" stop-color="#FF8A4C"/>
+          </linearGradient>
+        </defs>
+        <path d="M13 1.4c3.4 5 7.4 7.8 7.4 13.2 0 4.6-3.3 8.3-7.4 10.5-4.1-2.2-7.4-5.9-7.4-10.5C5.6 9.2 9.6 6.4 13 1.4Z" stroke="url(#tfg)" stroke-width="1.4" fill="rgba(154,108,255,.12)"/>
+        <path d="M13 8.6c1.8 2.6 3.9 4.1 3.9 7 0 2.5-1.6 4.4-3.9 5.7-2.3-1.3-3.9-3.2-3.9-5.7 0-2.9 2.1-4.4 3.9-7Z" fill="url(#tfg)" opacity=".92"/>
+        <path d="M9.7 24.7h6.6l-1.1 3.3a2.2 2.2 0 0 1-4.4 0z" fill="url(#tfg)" opacity=".9"/>
+      </svg>
       <span class="brand-name">Torchline <span>Cloud</span></span>
     </a>
     <nav class="navlinks" aria-label="Sections">
@@ -659,17 +748,33 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
             <img src="assets/integrations/stripe.svg" alt="Stripe" height="20">
           </div>
 
-          <div class="cta-row" style="margin-top:28px">
+          <div style="margin-top:26px; border:1px solid rgba(168,140,255,.18); border-radius:var(--r-md); overflow:hidden">
+            <div style="display:grid; grid-template-columns:1fr auto; gap:10px; padding:12px 16px; background:rgba(255,255,255,.03); border-bottom:1px solid rgba(168,140,255,.14)">
+              <span style="font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2)">Torchflow on its own</span>
+              <span style="font-family:var(--mono); font-size:.72rem; color:var(--ink-2)">$129 · $179 · $249 one-time</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr auto; gap:10px; padding:12px 16px; background:rgba(89,230,255,.06)">
+              <span style="font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan)">On Torchline Cloud</span>
+              <span style="font-family:var(--mono); font-size:.72rem; color:var(--cyan)">included, monthly — with hosting</span>
+            </div>
+            <div style="padding:12px 16px; font-size:.8rem; color:var(--muted); border-top:1px solid rgba(168,140,255,.12)">
+              The lifetime prices on torchflow.ai buy the builder alone — no hosting, no database, no domain, no
+              backups, no agents. On Torchline Cloud the builder comes with the instance, billed monthly like
+              everything else.
+            </div>
+          </div>
+
+          <div class="cta-row" style="margin-top:22px">
             <a class="btn btn-ghost" href="https://torchflow.ai" target="_blank" rel="noopener">See Torchflow →</a>
           </div>
         </div>
 
         <div>
           <div class="shot">
-            <div class="shot-bar"><i></i><i></i><i></i><span>coppertrail.coffee — built with Torchflow</span></div>
-            <img src="assets/showcase/copper_trail.png" alt="A coffee brand site built with Torchflow" loading="lazy">
+            <div class="shot-bar"><i></i><i></i><i></i><span>torchflow.ai</span></div>
+            <a href="https://torchflow.ai" target="_blank" rel="noopener"><img src="assets/showcase/torchflow-hero.png" alt="The Torchflow builder, prompt to production" loading="lazy"></a>
           </div>
-          <div class="shot-cap">A real brand site, shipped from a prompt</div>
+          <div class="shot-cap">Prompt to production — no code required</div>
         </div>
       </div>
     </div>
@@ -802,46 +907,119 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
     <div class="wrap">
       <div class="sechead">
         <div>
-          <span class="eyebrow">Under the hood</span>
-          <h2 style="margin-top:14px">What's running on<br>your box.</h2>
+          <span class="eyebrow">One place, the whole job</span>
+          <h2 style="margin-top:14px">Work on your projects, update your repo, deploy, and host —<br>all from
+            one site.</h2>
         </div>
-        <p>The stack behind the bundle — provisioned, patched and backed up by us. You see it in the desktop;
-          you never have to operate it.</p>
+        <p>No jumping between a builder, a Git host, a DNS dashboard, a backup script and a monitoring tab.
+          It's one instance, one login, one bill — and the pieces are already wired to each other.</p>
       </div>
 
-      <div class="panel split">
-        <ul class="inc-list">
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>Vaultwarden.</b> <span>Team password manager on your own instance. Included on every size, not a licence line.</span></div>
-          </li>
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>A database.</b> <span>PostgreSQL provisioned with your instance, or the connection details to plug your app into it.</span></div>
-          </li>
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>Encrypted nightly backups.</b> <span>Offsite, versioned, restorable from the UI. Tested restores, not just "backups enabled".</span></div>
-          </li>
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>TLS and DNS.</b> <span>Certificates issued and renewed for you, on your domain or a subdomain of ours.</span></div>
-          </li>
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>Uptime and resource monitoring.</b> <span>Memory, disk and app health, visible in your desktop and watched by us.</span></div>
-          </li>
-          <li>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
-            <div><b>Updates and patching.</b> <span>Base images, security patches and app upgrades handled on a maintenance window.</span></div>
-          </li>
-        </ul>
-        <div style="display:grid; gap:18px; align-content:start">
-          <p class="note"><strong>What you don't get:</strong> shell access, root, or a Docker console. That's
-            deliberate. It's what keeps an instance reproducible and keeps "I broke it at 2am" from being your
-            weekend.</p>
-          <p class="note"><strong>What you do get:</strong> logs, environment variables, restart, app file
-            browser, database browser and a one-click upgrade — all in the desktop UI.</p>
+      <div class="incgrid">
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>Vaultwarden</b>
+          <p>Team password manager, running on your own instance. Not a per-seat SaaS, not a shared
+            spreadsheet.</p>
+          <span class="tagx">every size · no licence fee</span>
+        </div>
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>PostgreSQL database</b>
+          <p>Provisioned with your instance, or handed to you as connection details to plug an app into.</p>
+          <span class="tagx">included</span>
+        </div>
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>Nightly encrypted backups</b>
+          <p>Offsite, versioned and restorable from the UI. Tested restores — not just "backups enabled".</p>
+          <span class="tagx">tested monthly</span>
+        </div>
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>TLS and DNS</b>
+          <p>Certificates issued and renewed for you, on your domain or a subdomain of ours. No certbot, no
+            expiry surprises.</p>
+          <span class="tagx">auto-renewed</span>
+        </div>
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>Uptime and resource monitoring</b>
+          <p>Memory, disk and app health, visible in your desktop and watched by us and by the agents.</p>
+          <span class="tagx">24/7</span>
+        </div>
+        <div class="inc">
+          <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
+          <b>Updates and patching</b>
+          <p>Base images, security patches and app upgrades handled on a maintenance window, not on a Friday.</p>
+          <span class="tagx">scheduled</span>
+        </div>
+      </div>
+
+      <!-- SECURITY -->
+      <div class="sec" id="security">
+        <div>
+          <span class="eyebrow">What you get</span>
+          <h3 style="margin-top:14px; font-size:clamp(1.4rem,2.2vw,1.85rem)">Security and Monitoring</h3>
+          <p class="lede" style="margin-top:14px; font-size:.98rem">
+            We make sure your apps are deployed securely, that your VPS and Cloudflare stay in sync, and that
+            every site is live behind a secure, custom domain. Your instance is isolated, firewalled and
+            patched — and there's a monitoring agent watching it even when nobody is looking.</p>
+          <p class="lede" style="margin-top:14px; font-size:.98rem">
+            Every instance also runs its own password manager. Your passwords, API keys and security keys
+            stay on the VPS instead of a browser or a spreadsheet, and they're unlocked only when you're
+            logged in to your cloud instance. The vault never leaves your box.</p>
+          <div class="chips" style="margin-top:20px">
+            <span class="chip" style="border-color:rgba(76,230,164,.35); color:var(--ok)">Isolated instance</span>
+            <span class="chip">Firewall + TLS</span>
+            <span class="chip">Vault on your VPS</span>
+            <span class="chip">Monitored 24/7</span>
+          </div>
+        </div>
+
+        <div class="slides" id="slides" aria-label="Security, database, monitoring and review">
+          <div class="slide on">
+            <div>
+              <img class="lg" src="assets/apps/vaultwarden.svg" alt="Vaultwarden">
+              <h4>Your vault lives on your box</h4>
+              <p>Passwords, API keys and tokens stay inside your instance and unlock only when you're signed in.</p>
+            </div>
+          </div>
+          <div class="slide">
+            <div>
+              <div class="lgs">
+                <img src="assets/apps/postgresql.svg" alt="PostgreSQL">
+                <img src="assets/apps/supabase.svg" alt="Supabase">
+              </div>
+              <h4>Your database, provisioned</h4>
+              <p>PostgreSQL on your instance, encrypted backups offsite, restores tested — not just scheduled.</p>
+            </div>
+          </div>
+          <div class="slide">
+            <div>
+              <img class="lg" src="assets/apps/uptimekuma.svg" alt="Uptime Kuma">
+              <h4>Watched around the clock</h4>
+              <p>Uptime, memory, disk and app health — surfaced in your desktop and watched by the agents.</p>
+            </div>
+          </div>
+          <div class="slide">
+            <div style="width:100%">
+              <h4 style="margin-bottom:12px">Reviewed before it ships</h4>
+              <div class="diff">
+                <div class="hd">deploy · staging → production</div>
+                <div class="del">- DATABASE_URL=postgres://localhost/dev</div>
+                <div class="add">+ DATABASE_URL=postgres://vault:•••@db:5432/app</div>
+                <div class="add">+ BACKUP_TARGET=r2://instance-nightly</div>
+                <div class="hd">checks · 14 passed · 0 failed</div>
+              </div>
+            </div>
+          </div>
+          <div class="dots" id="dots">
+            <button class="on" aria-label="Slide 1"></button>
+            <button aria-label="Slide 2"></button>
+            <button aria-label="Slide 3"></button>
+            <button aria-label="Slide 4"></button>
+          </div>
         </div>
       </div>
     </div>
@@ -852,26 +1030,39 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
     <div class="wrap">
       <div class="sechead">
         <div>
-          <span class="eyebrow">Catalog</span>
-          <h2 style="margin-top:14px">Supported, maintained,<br>and known to work together.</h2>
+          <span class="eyebrow">The shelf</span>
+          <h2 style="margin-top:14px">Connectors, Apps,<br>and Integrations</h2>
         </div>
-        <p>Every app here is one we deploy and maintain. Heavier apps need more room, so they unlock as your
-          instance grows — no surprises halfway through an install.</p>
+        <p style="font-size:.94rem; max-width:42ch">Everything here is deployed and maintained by us, and known
+          to work together. Heavier apps unlock as your instance grows.</p>
       </div>
 
+      <div class="catlabel">Connectors — wired into your build</div>
+      <div class="conn">
+        <div class="c"><img src="assets/apps/github.svg" alt="GitHub">GitHub</div>
+        <div class="c"><img src="assets/apps/figma.svg" alt="Figma">Figma</div>
+        <div class="c"><img src="assets/apps/supabase.svg" alt="Supabase">Supabase</div>
+        <div class="c"><img src="assets/apps/airtable.svg" alt="Airtable">Airtable</div>
+        <div class="c"><img src="assets/apps/google.svg" alt="Google">Google</div>
+        <div class="c"><img src="assets/apps/stripe.svg" alt="Stripe">Stripe</div>
+        <div class="c"><img src="assets/apps/cloudflare.svg" alt="Cloudflare">Cloudflare</div>
+        <div class="c"><img src="assets/apps/telegram.svg" alt="Telegram">Telegram bots</div>
+      </div>
+
+      <div class="catlabel">Apps — deployed and maintained by us</div>
       <div class="cat">
-        <div class="app"><span class="mark">N</span><span class="nm">Next.js / Node app</span><span class="tier">4 GB+</span></div>
-        <div class="app"><span class="mark">n8</span><span class="nm">n8n</span><span class="tier">4 GB+</span></div>
-        <div class="app"><span class="mark">DS</span><span class="nm">DocuSeal</span><span class="tier">4 GB+</span></div>
-        <div class="app"><span class="mark">V</span><span class="nm">Vaultwarden</span><span class="tier">included</span></div>
-        <div class="app gated"><span class="mark">Cw</span><span class="nm">Chatwoot</span><span class="tier">8 GB+</span></div>
-        <div class="app gated"><span class="mark">Br</span><span class="nm">Baserow</span><span class="tier">8 GB+</span></div>
-        <div class="app gated"><span class="mark">Md</span><span class="nm">Medusa</span><span class="tier">8 GB+</span></div>
-        <div class="app gated"><span class="mark">Du</span><span class="nm">Directus</span><span class="tier">8 GB+</span></div>
-        <div class="app gated"><span class="mark">Pz</span><span class="nm">Postiz</span><span class="tier">16 GB+</span></div>
-        <div class="app gated"><span class="mark">Bb</span><span class="nm">Budibase</span><span class="tier">16 GB+</span></div>
-        <div class="app"><span class="mark">He</span><span class="nm">Hermes agents</span><span class="tier">AI credit</span></div>
-        <div class="app"><span class="mark">+</span><span class="nm">Your own repo</span><span class="tier">migration</span></div>
+        <div class="app"><img src="assets/apps/nextdotjs.svg" alt=""><span class="nm">Next.js / Node</span><span class="tier">4 GB+</span></div>
+        <div class="app"><img src="assets/apps/n8n.svg" alt=""><span class="nm">n8n</span><span class="tier">4 GB+</span></div>
+        <div class="app"><span class="mk">DS</span><span class="nm">DocuSeal</span><span class="tier">4 GB+</span></div>
+        <div class="app"><img src="assets/apps/vaultwarden.svg" alt=""><span class="nm">Vaultwarden</span><span class="tier">included</span></div>
+        <div class="app gated"><img src="assets/apps/chatwoot.svg" alt=""><span class="nm">Chatwoot</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><img src="assets/apps/baserow.svg" alt=""><span class="nm">Baserow</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><img src="assets/apps/medusa.svg" alt=""><span class="nm">Medusa</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><img src="assets/apps/directus.svg" alt=""><span class="nm">Directus</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><span class="mk">Pz</span><span class="nm">Postiz</span><span class="tier">16 GB+</span></div>
+        <div class="app gated"><img src="assets/apps/budibase.svg" alt=""><span class="nm">Budibase</span><span class="tier">16 GB+</span></div>
+        <div class="app"><span class="mk" style="background:none;padding:0;display:grid;place-items:center;color:var(--violet)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span><span class="nm">Hermes</span><span class="tier">AI credit</span></div>
+        <div class="app"><span class="mk">+</span><span class="nm">Your repo</span><span class="tier">migration</span></div>
       </div>
     </div>
   </section>
@@ -1531,6 +1722,28 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       }
     }, { threshold: 0.02 }).observe(canvas);
   }
+})();
+
+/* security slideshow */
+(function () {
+  const box = document.getElementById('slides');
+  if (!box) return;
+  const slides = [...box.querySelectorAll('.slide')];
+  const dots = [...box.querySelectorAll('#dots button')];
+  if (slides.length < 2) return;
+  let i = 0, timer = null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((el, k) => el.classList.toggle('on', k === i));
+    dots.forEach((d, k) => d.classList.toggle('on', k === i));
+  }
+  function start() { if (!reduce && !timer) timer = setInterval(() => go(i + 1), 5200); }
+  function stop() { clearInterval(timer); timer = null; }
+  dots.forEach((d, k) => d.addEventListener('click', () => { stop(); go(k); start(); }));
+  box.addEventListener('mouseenter', stop);
+  box.addEventListener('mouseleave', start);
+  start();
 })();
 </script>
 </body>
