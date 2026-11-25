@@ -208,20 +208,55 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 @media (max-width:880px){ .sechead{ grid-template-columns:1fr; gap:14px; } }
 .sechead p{ color:var(--muted); max-width:38ch; }
 
-/* ecosystem strip ------------------------------------------------ */
-.eco{ display:flex; flex-wrap:wrap; align-items:stretch; gap:0; border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); }
-.eco-item{
-  flex:1 1 200px; padding:22px 22px 24px; border-right:1px solid var(--hairline);
-  display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit; transition:background .2s;
-}
-.eco-item:last-child{ border-right:0; }
-.eco-item:hover{ background:rgba(154,108,255,.06); }
-.eco-item .k{ font-family:var(--mono); font-size:.64rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted-2); }
-.eco-item .n{ font-family:var(--display); font-size:1.06rem; }
-.eco-item .d{ font-size:.86rem; color:var(--muted); line-height:1.5; }
-.eco-item.here{ background:linear-gradient(180deg, rgba(89,230,255,.08), transparent); }
-.eco-item.here .n{ color:var(--cyan); }
+/* bundle grid ----------------------------------------------------- */
+.bundle{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+@media (max-width:980px){ .bundle{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:600px){ .bundle{ grid-template-columns:1fr; } }
 
+.bcard{
+  position:relative; display:flex; flex-direction:column; padding:22px 20px 20px; border:1px solid rgba(168,140,255,.18);
+  border-radius:var(--r-lg); background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
+  transition:border-color .2s, transform .2s, background .2s;
+}
+.bcard:hover{ border-color:var(--hairline-2); transform:translateY(-2px); background:linear-gradient(180deg, rgba(154,108,255,.09), rgba(255,255,255,.01)); }
+.bcard .idx{ position:absolute; top:16px; right:18px; font-family:var(--mono); font-size:.62rem; letter-spacing:.14em; color:var(--muted-2); }
+.bcard .em{
+  width:50px; height:50px; border-radius:14px; display:grid; place-items:center;
+  border:1px solid rgba(168,140,255,.30); color:var(--em, var(--cyan));
+  background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.10), rgba(255,255,255,.02));
+  box-shadow:0 0 22px -8px var(--em, var(--cyan)), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.bcard h3{ margin-top:16px; font-size:1.02rem; }
+.bcard .tag{
+  display:inline-block; margin-top:2px; font-family:var(--mono); font-size:.58rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--muted-2);
+}
+.bcard p{ margin-top:9px; font-size:.855rem; line-height:1.55; color:var(--muted); }
+.bcard .incl{
+  margin-top:auto; padding-top:16px; font-family:var(--mono); font-size:.56rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--cyan); opacity:.75;
+}
+
+/* build-from-torchflow -------------------------------------------- */
+.build{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.92fr); gap:clamp(20px,4vw,52px); align-items:center; }
+@media (max-width:900px){ .build{ grid-template-columns:1fr; } }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.chip{
+  display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border-radius:999px;
+  border:1px solid rgba(168,140,255,.22); background:rgba(255,255,255,.03);
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2);
+}
+.chip svg{ color:var(--cyan); }
+.pipeline{ display:grid; gap:10px; }
+.prow{
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border:1px solid rgba(168,140,255,.18); border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(24,15,58,.6), rgba(8,7,28,.55));
+}
+.prow .n{ font-family:var(--mono); font-size:.62rem; color:var(--muted-2); letter-spacing:.14em; }
+.prow b{ font-weight:500; font-size:.92rem; }
+.prow span.d{ margin-left:auto; font-family:var(--mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--violet); }
+.prow.accent{ border-color:rgba(89,230,255,.42); box-shadow:0 0 0 1px rgba(89,230,255,.10) inset, 0 18px 40px -30px rgba(89,230,255,.8); }
 /* how (timeline) -------------------------------------------------- */
 .flow{ position:relative; display:grid; gap:0; margin-top:8px; }
 .flow::before{
@@ -399,8 +434,9 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       <span class="brand-name">Torchline <span>Cloud</span></span>
     </a>
     <nav class="navlinks" aria-label="Sections">
+      <a href="#bundle">Bundle</a>
+      <a href="#build">Build</a>
       <a href="#how">How it works</a>
-      <a href="#included">What's included</a>
       <a href="#catalog">Catalog</a>
       <a href="#pricing">Pricing</a>
       <a href="#partners">Partners</a>
@@ -417,16 +453,16 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       <div class="hero-copy">
         <span class="eyebrow">Torchline Cloud · managed hosting</span>
         <h1>Deploy it.<br><span class="hot">We'll run it.</span></h1>
-        <p class="lede">Host the apps your business actually runs on. Build in Torchflow, review it, push it to
-          our cloud — and we take over the servers, the updates, the backups and the monitoring. No terminal,
-          no Docker homework, no 2am rebuilds.</p>
+        <p class="lede">Host the apps your business actually runs on. One instance brings the whole stack with
+          it — the Torchflow builder, the agent team, DNS, a password vault and monitoring. Build it, review
+          it, deploy it; we take over the servers, the updates and the backups.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#pricing">Deploy in ~15 minutes</a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <div class="trust">
           <span><i></i>From $49/mo</span>
-          <span><i></i>Vaultwarden + database included</span>
+          <span><i></i>Builder + agents + DNS included</span>
           <span><i></i>No SSH required</span>
         </div>
       </div>
@@ -448,31 +484,114 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
     </div>
   </section>
 
-  <!-- ECOSYSTEM -->
-  <div class="wrap">
-    <div class="eco">
-      <a class="eco-item" href="#how">
-        <span class="k">01 — Build</span>
-        <span class="n">Torchflow</span>
-        <span class="d">Generate or assemble the app. Prompt it, wire the integrations, keep the code.</span>
-      </a>
-      <div class="eco-item here">
-        <span class="k">02 — Host</span>
-        <span class="n">Torchline Cloud</span>
-        <span class="d">Where it runs. Capacity, databases, backups, TLS, monitoring and a UI you don't need a terminal for.</span>
+  <!-- BUNDLE -->
+  <section id="bundle" style="padding-top:clamp(34px,4vw,58px)">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">The bundle</span>
+          <h2 style="margin-top:14px">One instance.<br>The whole stack.</h2>
+        </div>
+        <p>You're not renting a server and a login. Every Torchline Cloud instance ships with the six things
+          that turn a deployed app into a business system — and you don't pay extra for any of them.</p>
       </div>
-      <a class="eco-item" href="#included">
-        <span class="k">03 — Operate</span>
-        <span class="n">Agents</span>
-        <span class="d">Hermes agents watch the instance, answer on your AI credit, and file the tickets you'd otherwise file.</span>
-      </a>
-      <a class="eco-item" href="#domains">
-        <span class="k">04 — Connect</span>
-        <span class="n">Your DNS</span>
-        <span class="d">Keep Cloudflare or use ours. A CNAME, a certificate, done.</span>
-      </a>
+
+      <div class="bundle">
+        <div class="bcard" style="--em:var(--cyan)">
+          <span class="idx">01</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M7.6 17.6h8.8a3.6 3.6 0 0 0 .4-7.2 5.1 5.1 0 0 0-9.7-1.2 3.9 3.9 0 0 0 .5 8.4Z"/><circle cx="12" cy="13.4" r="1.7"/><path d="M12 12v-2"/></svg></span>
+          <h3>Torchline Cloud</h3>
+          <span class="tag">host · your instance</span>
+          <p>Your own isolated box with a real domain, TLS, a database and a desktop UI instead of a terminal.
+            Sized by RAM, not by permission slips.</p>
+          <span class="incl">included</span>
+        </div>
+
+        <div class="bcard" style="--em:var(--ember)">
+          <span class="idx">02</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="2.2"/><circle cx="12" cy="6.6" r="2.2"/><circle cx="18.5" cy="14.6" r="2.2"/><path d="M7.2 15.4 10.4 8.5M13.6 8.2l3.4 4.6M8 17.4h8"/></svg></span>
+          <h3>Torchflow</h3>
+          <span class="tag">build · no code</span>
+          <p>Describe the app you need in plain English, or start from a template. Torchflow assembles it —
+            dashboards, forms, Telegram bots, internal tools — and deploys straight to your instance.</p>
+          <span class="incl">included</span>
+        </div>
+
+        <div class="bcard" style="--em:var(--violet)">
+          <span class="idx">03</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span>
+          <h3>Hermes agents</h3>
+          <span class="tag">operate · on your instance</span>
+          <p>An agent team that watches the instance, answers on your own AI credit, drafts the replies, files
+            the tickets — and can be pointed at your data instead of ours.</p>
+          <span class="incl">included</span>
+        </div>
+
+        <div class="bcard" style="--em:var(--cyan)">
+          <span class="idx">04</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.9 3.2 2.9 13.2 0 16.4M12 3.8c-2.9 3.2-2.9 13.2 0 16.4"/></svg></span>
+          <h3>DNS &amp; Cloudflare</h3>
+          <span class="tag">connect · your domain</span>
+          <p>Keep your own Cloudflare account and point a CNAME at us, or let us hold the zone. Certificates
+            are issued and renewed for you — no DNS homework, no downtime.</p>
+          <span class="incl">included</span>
+        </div>
+
+        <div class="bcard" style="--em:var(--magenta)">
+          <span class="idx">05</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2 19 6v5.7c0 4.2-2.9 7.6-7 9.1-4.1-1.5-7-4.9-7-9.1V6Z"/><circle cx="12" cy="11" r="1.8"/><path d="M12 12.8v2.4"/></svg></span>
+          <h3>Vaultwarden</h3>
+          <span class="tag">protect · password vault</span>
+          <p>A team password manager running on your own instance — not a $5/seat SaaS, not shared spreadsheets.
+            Every size, at no extra cost.</p>
+          <span class="incl">included</span>
+        </div>
+
+        <div class="bcard" style="--em:var(--cyan)">
+          <span class="idx">06</span>
+          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 13.2h3.6l2.4-6 3.8 12 2.6-6h6"/></svg></span>
+          <h3>Monitoring &amp; VPS</h3>
+          <span class="tag">watch · 24/7</span>
+          <p>Memory, disk, uptime and app health on a real VPS, watched by us and by the agents. Nightly
+            encrypted backups included, restores tested.</p>
+          <span class="incl">included</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- BUILD FROM TORCHFLOW -->
+  <section id="build">
+    <div class="wrap">
+      <div class="build">
+        <div>
+          <span class="eyebrow">No code to deploy</span>
+          <h2 style="margin-top:14px">Build an app in a sentence.<br>Ship it to your cloud.</h2>
+          <p class="lede" style="margin-top:18px; font-size:1.04rem">
+            This is the part people miss: you don't need a developer, a repo or a terminal to get something
+            running. Describe what you need in Torchflow, review the result on a preview URL, and press deploy.
+            It lands on your Torchline Cloud instance with its database, domain, certificate and backups
+            already wired.</p>
+          <div class="chips">
+            <span class="chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 4 3 11l6 2.2L11 20l3.2-4.4L20 18z"/></svg>Telegram bots</span>
+            <span class="chip">internal dashboards</span>
+            <span class="chip">client portals</span>
+            <span class="chip">forms &amp; intake</span>
+            <span class="chip">automations</span>
+          </div>
+          <p class="note" style="margin-top:24px">Already have an app? Bring the repo and we'll containerise,
+            migrate and cut it over as a fixed-price setup. Same instance, same desktop, same backups.</p>
+        </div>
+
+        <div class="pipeline" aria-label="Build and deploy flow">
+          <div class="prow"><span class="n">01</span><b>Describe it or pick a template</b><span class="d">torchflow</span></div>
+          <div class="prow"><span class="n">02</span><b>Preview on a staging URL</b><span class="d">review</span></div>
+          <div class="prow accent"><span class="n">03</span><b>Deploy to Torchline Cloud</b><span class="d">live</span></div>
+          <div class="prow"><span class="n">04</span><b>Domain, database, backups, agents</b><span class="d">automatic</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- HOW IT WORKS -->
   <section id="how">
@@ -480,24 +599,35 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       <div class="sechead">
         <div>
           <span class="eyebrow">The whole loop</span>
-          <h2 style="margin-top:14px">Build, review, deploy.<br>Then it's our problem.</h2>
+          <h2 style="margin-top:14px">We build the instance first.<br>You just fill it.</h2>
         </div>
-        <p>Most hosting hands you an empty server and a wiki. We hand you a finished instance and stay
-          responsible for it — including the parts that break at 3am.</p>
+        <p>Most hosting hands you an empty server and a wiki. We hand you a finished instance — box, database,
+          domain, vault, monitoring — and stay responsible for it, including the parts that break at 3am.</p>
       </div>
 
       <div class="flow">
         <div class="fstep">
           <div class="fnum">01</div>
           <div>
-            <div class="tagline">Build</div>
-            <h3>Start from the catalog, or bring the project you already have.</h3>
-            <p>Pick a supported app — a storefront, a helpdesk, an automation runner, a document signer — or
-              bring your own repo and we containerise, build and deploy it for you.</p>
+            <div class="tagline">Host</div>
+            <h3>Your instance exists before you've finished signing up.</h3>
+            <p>Pay, and a box is cloned for you from our golden image: operating system, database, TLS,
+              Vaultwarden, monitoring, backups and the desktop UI. Nothing to install, nothing to configure,
+              nothing to look up in a wiki.</p>
           </div>
         </div>
         <div class="fstep">
           <div class="fnum">02</div>
+          <div>
+            <div class="tagline">Build</div>
+            <h3>Torchflow, the catalog, or the project you already have.</h3>
+            <p>Describe an app in plain English and Torchflow assembles it — dashboard, portal, internal tool,
+              Telegram bot. Or pick a supported app from the catalog. Or hand us the repo and we containerise
+              and migrate it as a fixed-price setup.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">03</div>
           <div>
             <div class="tagline">Review</div>
             <h3>Staging on a real domain before anything is public.</h3>
@@ -506,7 +636,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           </div>
         </div>
         <div class="fstep">
-          <div class="fnum">03</div>
+          <div class="fnum">04</div>
           <div>
             <div class="tagline">Deploy</div>
             <h3>One click to your domain, or ours.</h3>
@@ -515,12 +645,12 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           </div>
         </div>
         <div class="fstep">
-          <div class="fnum">04</div>
+          <div class="fnum">05</div>
           <div>
             <div class="tagline">Operate</div>
             <h3>We watch it, patch it, back it up and answer for it.</h3>
-            <p>Nightly encrypted backups, uptime checks, dependency updates, and a human on the other end of
-              support. If the box degrades, we see it before your customers do.</p>
+            <p>Nightly encrypted backups, uptime and resource checks, dependency updates, and Hermes agents on
+              the instance doing the first pass. If the box degrades, we see it before your customers do.</p>
           </div>
         </div>
       </div>
@@ -532,11 +662,11 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
     <div class="wrap">
       <div class="sechead">
         <div>
-          <span class="eyebrow">Every instance</span>
-          <h2 style="margin-top:14px">The boring things,<br>already done.</h2>
+          <span class="eyebrow">Under the hood</span>
+          <h2 style="margin-top:14px">What's running on<br>your box.</h2>
         </div>
-        <p>These aren't add-ons or an upsell. They're the reason there's a base fee at all — and the reason
-          you don't need to hire anyone for them.</p>
+        <p>The stack behind the bundle — provisioned, patched and backed up by us. You see it in the desktop;
+          you never have to operate it.</p>
       </div>
 
       <div class="panel split">
@@ -614,8 +744,8 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <span class="eyebrow">Pricing</span>
           <h2 style="margin-top:14px">One number per instance.<br>No feature gates.</h2>
         </div>
-        <p>You're buying capacity, not permission slips. Pick the RAM you need; every app, the database,
-          Vaultwarden, backups and monitoring are included at every size.</p>
+        <p>You're buying capacity, not permission slips. Every size includes the full stack — Torchflow,
+          the agents, DNS, the database, Vaultwarden, backups and monitoring. Nothing above is an add-on.</p>
       </div>
 
       <div class="plans">
@@ -787,6 +917,18 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           those, we'll tell you before you pay.</p>
       </details>
       <details>
+        <summary>Do I have to use Torchflow?<span class="plus">+</span></summary>
+        <p>No — but it's included, so there's no reason not to. Use it to build something new without a
+          developer, or ignore it and deploy a catalog app or your own repo instead. It's a tool that comes
+          with the instance, not a requirement for using it.</p>
+      </details>
+      <details>
+        <summary>Can it run a Telegram bot or a webhook that has to stay online?<span class="plus">+</span></summary>
+        <p>Yes. Bots and always-on workers run on your instance, which is monitored and restarted if it falls
+          over. That's usually the thing people can't do from a laptop or a free tier — the process dies when
+          the laptop closes.</p>
+      </details>
+      <details>
         <summary>Do I get SSH?<span class="plus">+</span></summary>
         <p>No — and that's the product. You get logs, environment variables, restart, a file browser, a
           database browser and deployments from the UI. Everything you need to run the app, nothing that lets
@@ -839,8 +981,9 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       </div>
       <div class="fcol">
         <b>Platform</b>
+        <a href="#bundle">The bundle</a>
+        <a href="#build">Build without code</a>
         <a href="#how">How it works</a>
-        <a href="#included">What's included</a>
         <a href="#catalog">Catalog</a>
         <a href="#pricing">Pricing</a>
       </div>
