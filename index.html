@@ -437,6 +437,13 @@ section + section::after{
 .prob .cite{ margin-top:10px; }
 
 /* cost table */
+.lvl{ display:inline-grid; place-items:center; width:22px; height:22px; border-radius:7px;
+  font-family:var(--mono); font-size:.66rem; font-weight:700; margin-right:6px; vertical-align:-5px; }
+.lvl-1,.lvl-2,.lvl-3{ background:rgba(76,230,164,.14); color:var(--ok); border:1px solid rgba(76,230,164,.35) }
+.lvl-4,.lvl-5,.lvl-6{ background:rgba(255,194,122,.14); color:#ffc27a; border:1px solid rgba(255,194,122,.35) }
+.lvl-7,.lvl-8{ background:rgba(255,122,90,.15); color:#ff8a7a; border:1px solid rgba(255,122,90,.38) }
+.lvl-9,.lvl-10{ background:rgba(255,60,60,.2); color:#ff5a5a; border:1px solid rgba(255,60,60,.45) }
+
 table.cost{ width:100%; border-collapse:collapse; min-width:980px; font-size:.82rem; }
 table.cost th, table.cost td{ padding:12px 14px; text-align:left; border-bottom:1px solid rgba(168,140,255,.1); vertical-align:top; }
 table.cost thead th{ font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase;
@@ -446,8 +453,13 @@ table.cost tbody th{ font-weight:500; color:var(--ink); width:170px; }
 table.cost td{ color:var(--muted); font-size:.8rem; line-height:1.5; }
 table.cost td.risk-hi{ color:#ff8a7a; }
 table.cost td.risk-md{ color:#ffc27a; }
+table.cost td.risk-lo{ color:var(--ok); }
 table.cost td.money{ font-family:var(--mono); font-size:.76rem; color:var(--ink); white-space:nowrap; }
-table.cost td.money:last-child{ color:var(--ok); }
+table.cost td.money.diy{ color:#ffc27a; }
+table.cost td.money.agency{ color:#ff7a6b; }
+table.cost td.money.ours{ color:var(--ok); }
+table.cost td.time{ font-family:var(--mono); font-size:.74rem; color:var(--muted-2); white-space:nowrap; }
+table.cost{ min-width:940px; }
 table.cost tfoot th, table.cost tfoot td{ border-top:1px solid rgba(255,90,60,.35); border-bottom:0;
   background:rgba(255,90,60,.06); font-weight:600; color:var(--ink); padding-top:16px; }
 table.cost tfoot td.money{ color:var(--ok); }
@@ -1016,85 +1028,33 @@ body{ overflow-x:clip; }
           <thead>
             <tr>
               <th>What you need</th>
-              <th>Expertise required</th>
+              <th>Difficulty</th>
               <th>Risk if you do it alone</th>
+              <th>Your time</th>
               <th>Cost on your own</th>
-              <th>Agency retainer</th>
-              <th class="sav">With Torchline</th>
+              <th>Agency</th>
+              <th class="sav">With us</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>A server that stays up</th>
-              <td>Patching, firewalls, SSH, uptime</td>
-              <td class="risk-hi">High — open ports, unpatched OS</td>
-              <td class="money">$9 – 30 / mo</td>
-              <td class="money">$150 – 400 / mo</td>
-              <td class="money">included</td>
-            </tr>
-            <tr>
-              <th>PostgreSQL</th>
-              <td>Schema, backups, RLS, tuning</td>
-              <td class="risk-hi">High — exposed or unbacked data</td>
-              <td class="money">$15 – 25 / mo</td>
-              <td class="money">$100 – 300 / mo</td>
-              <td class="money">included</td>
-            </tr>
-            <tr>
-              <th>Password vault</th>
-              <td>Self-host, TLS, sync, recovery</td>
-              <td class="risk-md">Medium — a leaked vault is everything</td>
-              <td class="money">$20 – 25 / mo</td>
-              <td class="money">$50 – 100 / mo</td>
-              <td class="money">included</td>
-            </tr>
-            <tr>
-              <th>DNS, TLS, CDN</th>
-              <td>Records, certs, renewal, propagation</td>
-              <td class="risk-md">Medium — expired cert, silent downtime</td>
-              <td class="money">$0 – 20 / mo</td>
-              <td class="money">$75 – 200 / mo</td>
-              <td class="money">included</td>
-            </tr>
-            <tr>
-              <th>Monitoring and backups</th>
-              <td>Alerting, retention, restore drills</td>
-              <td class="risk-hi">High — you find out from a customer</td>
-              <td class="money">$12 – 25 / mo</td>
-              <td class="money">$100 – 300 / mo</td>
-              <td class="money">included</td>
-            </tr>
-            <tr>
-              <th>Building the app</th>
-              <td>Development, or a builder licence</td>
-              <td class="risk-md">Medium — ships insecure by default</td>
-              <td class="money">$25 – 100 / mo</td>
-              <td class="money">$2,000 – 8,000 / app</td>
-              <td class="money">Torchflow included</td>
-            </tr>
-            <tr>
-              <th>An agent that runs it</th>
-              <td>Prompting, key handling, spend limits</td>
-              <td class="risk-md">Medium — runaway spend, no guardrails</td>
-              <td class="money">$20 – 100 / mo</td>
-              <td class="money">$500 – 2,000 / mo</td>
-              <td class="money">included, AI at 25%</td>
-            </tr>
+<tr><th>A server that stays up</th><td><span class="lvl lvl-7">7</span><span style="color:var(--muted);font-size:.76rem">Patching, firewalls, SSH, uptime</span></td><td class="risk-hi">High — open ports, unpatched OS</td><td class="time">3.5 h</td><td class="money diy">$19</td><td class="money agency">$275</td><td class="money ours">included</td></tr><tr><th>PostgreSQL</th><td><span class="lvl lvl-7">7</span><span style="color:var(--muted);font-size:.76rem">Schema, backups, RLS, tuning</span></td><td class="risk-hi">High — exposed or unbacked data</td><td class="time">2.5 h</td><td class="money diy">$20</td><td class="money agency">$200</td><td class="money ours">included</td></tr><tr><th>Password vault</th><td><span class="lvl lvl-5">5</span><span style="color:var(--muted);font-size:.76rem">Self-host, TLS, sync, recovery</span></td><td class="risk-md">Medium — a leaked vault is everything</td><td class="time">1.5 h</td><td class="money diy">$22</td><td class="money agency">$75</td><td class="money ours">included</td></tr><tr><th>DNS, TLS, CDN</th><td><span class="lvl lvl-5">5</span><span style="color:var(--muted);font-size:.76rem">Records, certs, renewal, propagation</span></td><td class="risk-md">Medium — expired cert, silent downtime</td><td class="time">1.5 h</td><td class="money diy">$10</td><td class="money agency">$138</td><td class="money ours">included</td></tr><tr><th>Monitoring and backups</th><td><span class="lvl lvl-6">6</span><span style="color:var(--muted);font-size:.76rem">Alerting, retention, restore drills</span></td><td class="risk-hi">High — you hear it from a customer</td><td class="time">2.5 h</td><td class="money diy">$18</td><td class="money agency">$200</td><td class="money ours">included</td></tr><tr><th>Building the app</th><td><span class="lvl lvl-8">8</span><span style="color:var(--muted);font-size:.76rem">Development, or a builder licence</span></td><td class="risk-md">Medium — ships insecure by default</td><td class="time">40 h once</td><td class="money diy">$62</td><td class="money agency">$5,000 once</td><td class="money ours">Torchflow included</td></tr><tr><th>An agent that runs it</th><td><span class="lvl lvl-6">6</span><span style="color:var(--muted);font-size:.76rem">Prompting, key handling, spend limits</span></td><td class="risk-md">Medium — runaway spend, no guardrails</td><td class="time">3.5 h</td><td class="money diy">$60</td><td class="money agency">$1,250</td><td class="money ours">included</td></tr>
           </tbody>
           <tfoot>
             <tr>
               <th>All of it</th>
-              <td>None — we hold it</td>
-              <td>Low — patched, backed up, watched</td>
-              <td class="money">$101 – 325 / mo</td>
-              <td class="money">$975 – 3,300 / mo</td>
-              <td class="money">$49 – 229 / mo</td>
+              <td><span class="lvl lvl-9">9</span><span style="color:var(--muted);font-size:.76rem">Three jobs at once</span></td>
+              <td class="risk-lo">Low — patched, backed up, watched</td>
+              <td class="time">14.5 h / mo</td>
+              <td class="money diy">$211</td>
+              <td class="money agency">$2,138</td>
+              <td class="money ours">$79</td>
             </tr>
             <tr>
-              <th>You keep</th>
+              <th>What it costs you</th>
               <td colspan="2">No staff, no retainer, no build fee</td>
-              <td colspan="2">Agency path: retainer plus $2,000–8,000 per app</td>
-              <td class="money">+$926 – 3,071 / mo</td>
+              <td class="time">14.5 h back</td>
+              <td colspan="2" class="money ours">$2,059 less every month</td>
+              <td class="money ours">+$725 of your time</td>
             </tr>
           </tfoot>
         </table>
