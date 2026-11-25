@@ -36,7 +36,8 @@
   --magenta:     #ff53d6;
   --ok:          #4ce6a4;
   --ok-glow:     rgba(76,230,164,.28);
-  --grid:        rgba(168,140,255,.055);
+  --grid:        rgba(214,222,255,.085);
+  --grid-bright: rgba(230,236,255,.16);
   --ember:       #ff8a4c;
   --cyan-dim:    rgba(89,230,255,.16);
   --violet-dim:  rgba(154,108,255,.16);
@@ -92,10 +93,33 @@ body{
   position:fixed; inset:0; z-index:0; pointer-events:none;
   background-image:
     linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size:64px 64px;
-  -webkit-mask-image:radial-gradient(ellipse 130% 95% at 50% -10%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
-  mask-image:radial-gradient(ellipse 130% 95% at 50% -10%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(var(--grid-bright) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-bright) 1px, transparent 1px);
+  background-size:64px 64px, 64px 64px, 320px 320px, 320px 320px;
+  -webkit-mask-image:radial-gradient(ellipse 140% 100% at 50% -8%, #000 0%, rgba(0,0,0,.6) 46%, transparent 88%);
+  mask-image:radial-gradient(ellipse 140% 100% at 50% -8%, #000 0%, rgba(0,0,0,.6) 46%, transparent 88%);
+}
+/* silver sparkle on the grid */
+.sparkle{
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55;
+  background-image:
+    radial-gradient(1.4px 1.4px at 20% 30%, rgba(255,255,255,.9), transparent 55%),
+    radial-gradient(1.2px 1.2px at 63% 12%, rgba(200,240,255,.85), transparent 55%),
+    radial-gradient(1.6px 1.6px at 82% 58%, rgba(255,255,255,.75), transparent 55%),
+    radial-gradient(1.2px 1.2px at 38% 74%, rgba(220,214,255,.8), transparent 55%),
+    radial-gradient(1.3px 1.3px at 11% 88%, rgba(255,255,255,.7), transparent 55%),
+    radial-gradient(1.5px 1.5px at 49% 44%, rgba(190,230,255,.75), transparent 55%),
+    radial-gradient(1.1px 1.1px at 72% 86%, rgba(255,255,255,.8), transparent 55%);
+  background-size:340px 340px, 420px 420px, 500px 500px, 380px 380px, 460px 460px, 300px 300px, 540px 540px;
+  animation: shimmer 16s linear infinite;
+  -webkit-mask-image:radial-gradient(ellipse 130% 100% at 50% 0%, #000 0%, rgba(0,0,0,.5) 55%, transparent 90%);
+  mask-image:radial-gradient(ellipse 130% 100% at 50% 0%, #000 0%, rgba(0,0,0,.5) 55%, transparent 90%);
+}
+@keyframes shimmer{
+  0%{ background-position:0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; opacity:.45 }
+  50%{ opacity:.8 }
+  100%{ background-position:0 -60px, 0 -80px, 0 -100px, 0 -70px, 0 -90px, 0 -55px, 0 -110px; opacity:.45 }
 }
 .grain{
   position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
@@ -335,7 +359,8 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .conn .c img{ width:20px; height:20px; filter:brightness(0) invert(1); opacity:.85; }
 
 /* product deep dives ---------------------------------------------- */
-.prod{ display:grid; grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr); gap:clamp(24px,4vw,58px); align-items:center; }
+.prod{ display:grid; grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr); gap:clamp(24px,4vw,58px); align-items:stretch; }
+.prod-side{ display:flex; flex-direction:column; justify-content:center; gap:16px; }
 @media (max-width:940px){ .prod{ grid-template-columns:1fr; } }
 .prod-head{ display:flex; align-items:center; gap:16px; }
 .prod-logo{ width:60px; height:60px; object-fit:contain; filter:drop-shadow(0 8px 24px rgba(255,138,76,.35)); }
@@ -362,6 +387,51 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .panelrow b{ font-weight:500; font-size:.9rem; flex:0 0 40%; }
 .panelrow span{ font-size:.84rem; color:var(--muted); }
 .panelrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--violet); margin-top:8px; flex:0 0 auto; box-shadow:0 0 10px var(--violet); }
+
+
+/* floating neon decorations --------------------------------------- */
+.dco{ position:absolute; pointer-events:none; z-index:0; opacity:.20; mix-blend-mode:screen; }
+.dco svg{ display:block; overflow:visible; }
+.dco::after{ content:""; position:absolute; inset:-30%; background:radial-gradient(closest-side, rgba(154,108,255,.30), transparent 70%); filter:blur(22px); z-index:-1; }
+.dco-1{ left:-90px; top:90px; transform:rotate(-14deg); }
+.dco-2{ right:-70px; top:140px; transform:rotate(11deg); }
+.dco-3{ left:-60px; bottom:40px; transform:rotate(9deg); opacity:.14; }
+.dco-4{ right:-100px; bottom:10px; transform:rotate(-8deg); opacity:.16; }
+@media (max-width:1100px){ .dco{ display:none; } }
+
+/* chat widget ------------------------------------------------------ */
+.chat-fab{
+  position:fixed; right:22px; bottom:22px; z-index:60; display:inline-flex; align-items:center; gap:9px;
+  min-height:48px; padding:0 18px; border-radius:999px; cursor:pointer;
+  font-family:var(--body); font-size:.9rem; font-weight:500; color:#0a0620;
+  background:linear-gradient(180deg,#b9f4ff,#5fe3ff 60%,#41c8ee); border:0;
+  box-shadow:0 12px 34px -12px rgba(89,230,255,.8), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.chat-fab:hover{ transform:translateY(-1px); }
+.chat-panel{
+  position:fixed; right:22px; bottom:82px; z-index:61; width:min(372px, calc(100vw - 32px));
+  max-height:min(70vh, 560px); display:none; flex-direction:column; overflow:hidden;
+  border:1px solid var(--hairline-2); border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(19,12,48,.98), rgba(9,8,32,.99));
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.95);
+}
+.chat-panel.open{ display:flex; }
+.chat-head{ display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid rgba(168,140,255,.16); }
+.chat-head b{ font-family:var(--display); font-size:.98rem; }
+.chat-head span{ margin-left:auto; font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ok); }
+.chat-head button{ background:none; border:0; color:var(--muted); font-size:1.1rem; cursor:pointer; padding:4px 6px; }
+.chat-body{ padding:14px 16px; overflow-y:auto; display:grid; gap:10px; }
+.chat-msg{ font-size:.86rem; line-height:1.5; color:var(--ink-2); background:rgba(255,255,255,.05); border:1px solid rgba(168,140,255,.14); border-radius:12px; padding:10px 12px; }
+.chat-msg.me{ background:rgba(89,230,255,.10); border-color:rgba(89,230,255,.3); color:var(--ink); margin-left:26px; }
+.chat-q{ display:flex; flex-wrap:wrap; gap:7px; padding:0 16px 14px; }
+.chat-q button{
+  font-family:var(--mono); font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; cursor:pointer;
+  color:var(--ink-2); background:rgba(255,255,255,.04); border:1px solid rgba(168,140,255,.2);
+  border-radius:999px; padding:6px 10px;
+}
+.chat-q button:hover{ border-color:var(--cyan); color:var(--cyan); }
+.chat-foot{ padding:12px 16px; border-top:1px solid rgba(168,140,255,.16); font-size:.78rem; color:var(--muted); }
+.chat-foot a{ color:var(--cyan); }
 
 /* how (timeline) -------------------------------------------------- */
 .flow{ position:relative; display:grid; gap:0; margin-top:8px; }
@@ -524,6 +594,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 <body>
 <div class="field"></div>
 <div class="gridtex"></div>
+<div class="sparkle"></div>
 <div class="grain"></div>
 
 <header>
@@ -595,6 +666,12 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
   </section>
 
   <!-- BUNDLE -->
+  <span class="dco dco-1" aria-hidden="true">
+    <svg width="130" height="100" viewBox="0 0 150 110" fill="none" stroke="url(#dg3)" stroke-width="1.6">
+      <defs><linearGradient id="dg3" x1="0" y1="0" x2="150" y2="110"><stop stop-color="#9A6CFF"/><stop offset="1" stop-color="#59E6FF"/></linearGradient></defs>
+      <path d="M38 74c-10 0-18-7.6-18-17S28 40 38 40c2.4-11 12-19 23.6-19 10.4 0 19.3 6.6 22.6 16 2-.8 4.2-1.2 6.4-1.2C101 35.8 110 44.6 110 55.4c0 1.6-.2 3.2-.6 4.7 4.4 2.6 7.4 7.4 7.4 12.9H38Z"/>
+    </svg>
+  </span>
   <section id="bundle" style="padding-top:clamp(34px,4vw,58px)">
     <div class="wrap">
       <div class="sechead">
@@ -705,6 +782,12 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 
   <!-- TORCHFLOW DEEP -->
   <section id="torchflow">
+    <span class="dco dco-2" aria-hidden="true">
+      <svg width="150" height="110" viewBox="0 0 150 110" fill="none" stroke="url(#dg1)" stroke-width="1.6">
+        <defs><linearGradient id="dg1" x1="0" y1="0" x2="150" y2="110"><stop stop-color="#59E6FF"/><stop offset=".55" stop-color="#9A6CFF"/><stop offset="1" stop-color="#FF53D6"/></linearGradient></defs>
+        <path d="M38 74c-10 0-18-7.6-18-17S28 40 38 40c2.4-11 12-19 23.6-19 10.4 0 19.3 6.6 22.6 16 2-.8 4.2-1.2 6.4-1.2C101 35.8 110 44.6 110 55.4c0 1.6-.2 3.2-.6 4.7 4.4 2.6 7.4 7.4 7.4 12.9H38Z"/>
+      </svg>
+    </span>
     <div class="wrap">
       <div class="prod">
         <div>
@@ -737,6 +820,14 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
             <div class="f"><b>Built for non-developers</b><span>No terminal, no package manager, no repo to
               babysit. If you can describe the workflow, you can ship it.</span></div>
           </div>
+        </div>
+
+        <div class="prod-side">
+          <div class="shot" style="margin-top:-6px">
+            <div class="shot-bar"><i></i><i></i><i></i><span>torchflow.ai</span></div>
+            <a href="https://torchflow.ai" target="_blank" rel="noopener"><img src="assets/showcase/torchflow-hero.png" alt="The Torchflow builder, prompt to production" loading="lazy"></a>
+          </div>
+          <div class="shot-cap" style="margin-top:-4px">Prompt to production — no code required</div>
 
           <div class="intg">
             <span class="lbl">Integrates with</span>
@@ -748,7 +839,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
             <img src="assets/integrations/stripe.svg" alt="Stripe" height="20">
           </div>
 
-          <div style="margin-top:26px; border:1px solid rgba(168,140,255,.18); border-radius:var(--r-md); overflow:hidden">
+          <div style="border:1px solid rgba(168,140,255,.18); border-radius:var(--r-md); overflow:hidden">
             <div style="display:grid; grid-template-columns:1fr auto; gap:10px; padding:12px 16px; background:rgba(255,255,255,.03); border-bottom:1px solid rgba(168,140,255,.14)">
               <span style="font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2)">Torchflow on its own</span>
               <span style="font-family:var(--mono); font-size:.72rem; color:var(--ink-2)">$129 · $179 · $249 one-time</span>
@@ -764,17 +855,9 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
             </div>
           </div>
 
-          <div class="cta-row" style="margin-top:22px">
+          <div class="cta-row">
             <a class="btn btn-ghost" href="https://torchflow.ai" target="_blank" rel="noopener">See Torchflow →</a>
           </div>
-        </div>
-
-        <div>
-          <div class="shot">
-            <div class="shot-bar"><i></i><i></i><i></i><span>torchflow.ai</span></div>
-            <a href="https://torchflow.ai" target="_blank" rel="noopener"><img src="assets/showcase/torchflow-hero.png" alt="The Torchflow builder, prompt to production" loading="lazy"></a>
-          </div>
-          <div class="shot-cap">Prompt to production — no code required</div>
         </div>
       </div>
     </div>
@@ -782,25 +865,18 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 
   <!-- HERMES DEEP -->
   <section id="hermes">
+    <span class="dco dco-3" aria-hidden="true">
+      <svg width="120" height="150" viewBox="0 0 120 150" fill="none" stroke="url(#dg2)" stroke-width="1.6">
+        <defs><linearGradient id="dg2" x1="0" y1="0" x2="120" y2="150"><stop stop-color="#FF8A4C"/><stop offset=".45" stop-color="#FF53D6"/><stop offset="1" stop-color="#9A6CFF"/></linearGradient></defs>
+        <path d="M60 12c16 24 35 37 35 62 0 21-15 38-35 48-20-10-35-27-35-48 0-25 19-38 35-62Z"/>
+        <path d="M60 46c8 12 18 19 18 32 0 11-7 20-18 25-11-5-18-14-18-25 0-13 10-20 18-32Z"/>
+      </svg>
+    </span>
     <div class="wrap">
       <div class="prod">
         <div>
-          <span class="eyebrow">A day in the life</span>
-          <h3 style="margin:14px 0 18px; font-size:1.15rem; letter-spacing:-.01em">Five jobs it already does
-            for our own companies</h3>
-          <div class="panelrows">
-            <div class="panelrow"><span class="dot"></span><b>Inbox triage</b><span>Sorts the morning mail, drafts the replies, escalates only what needs you.</span></div>
-            <div class="panelrow"><span class="dot"></span><b>Watch anything</b><span>Prices, competitors, breach lists, keywords — a digest when something actually moves.</span></div>
-            <div class="panelrow"><span class="dot"></span><b>Ops reports</b><span>Nightly numbers from your apps and database, written up before you wake.</span></div>
-            <div class="panelrow"><span class="dot"></span><b>Social &amp; support</b><span>Drafts posts, answers the helpdesk, files the ticket when it can't.</span></div>
-            <div class="panelrow"><span class="dot"></span><b>Build work</b><span>Small code and config changes, run against the box, with a review step.</span></div>
-          </div>
-          <div class="shot-cap" style="margin-top:10px">The work we already run our own companies on</div>
-        </div>
-
-        <div>
           <div class="prod-head">
-            <span class="em" style="--em:var(--violet); width:60px; height:60px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(168,140,255,.3); color:var(--violet); background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 30px -10px var(--violet)">
+            <span style="width:60px; height:60px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(168,140,255,.3); color:var(--violet); background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 30px -10px var(--violet)">
               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg>
             </span>
             <div>
@@ -830,9 +906,33 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
               Autonomy you can dial, not a switch.</span></div>
           </div>
 
-          <p class="note" style="margin-top:24px">This is the same agent stack we run our own companies on —
+          <p class="note" style="margin-top:22px">
+            <strong>Code, conversation and delegation at the same time.</strong> Because Torchflow and Hermes
+            share the instance, an agent can build the app, talk to your customer about it, and hand the next
+            step to another agent — in one run, without you opening a tab.
+          </p>
+          <p class="note" style="margin-top:12px">This is the same agent stack we run our own companies on —
             mail triage, competitor watching, support, publishing, security intel. You're getting the working
             version, not a demo.</p>
+        </div>
+
+        <div class="prod-side">
+          <span class="eyebrow">A day in the life</span>
+          <h3 style="margin:6px 0 0; font-size:1.15rem; letter-spacing:-.01em">Five jobs it already does
+            for our own companies</h3>
+          <div class="panelrows">
+            <div class="panelrow"><span class="dot"></span><b>Inbox triage</b><span>Sorts the morning mail, drafts the replies, escalates only what needs you.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Watch anything</b><span>Prices, competitors, breach lists, keywords — a digest when something actually moves.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Ops reports</b><span>Nightly numbers from your apps and database, written up before you wake.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Social &amp; support</b><span>Drafts posts, answers the helpdesk, files the ticket when it can't.</span></div>
+            <div class="panelrow"><span class="dot"></span><b>Build work</b><span>Small code and config changes, run against the box, with a review step.</span></div>
+          </div>
+          <div class="shot-cap" style="margin-top:-4px">The work we already run our own companies on</div>
+          <div class="chips" style="margin-top:6px">
+            <span class="chip">runs 24/7</span>
+            <span class="chip">on your credit</span>
+            <span class="chip">approval gates</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1185,6 +1285,13 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
   </section>
 
   <!-- PARTNERS -->
+  <span class="dco dco-4" aria-hidden="true">
+    <svg width="110" height="140" viewBox="0 0 120 150" fill="none" stroke="url(#dg4)" stroke-width="1.6">
+      <defs><linearGradient id="dg4" x1="0" y1="0" x2="120" y2="150"><stop stop-color="#59E6FF"/><stop offset=".5" stop-color="#9A6CFF"/><stop offset="1" stop-color="#FF53D6"/></linearGradient></defs>
+      <path d="M60 12c16 24 35 37 35 62 0 21-15 38-35 48-20-10-35-27-35-48 0-25 19-38 35-62Z"/>
+      <path d="M60 46c8 12 18 19 18 32 0 11-7 20-18 25-11-5-18-14-18-25 0-13 10-20 18-32Z"/>
+    </svg>
+  </span>
   <section id="partners">
     <div class="wrap">
       <div class="sechead">
@@ -1744,6 +1851,65 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
   box.addEventListener('mouseenter', stop);
   box.addEventListener('mouseleave', start);
   start();
+})();
+</script>
+
+<!-- SUPPORT CHAT -->
+<button class="chat-fab" id="chatFab" aria-expanded="false" aria-controls="chatPanel">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.7 9.7 0 0 1-3.2-.6L3 21l1.8-4.8A8.2 8.2 0 0 1 3.6 11a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8.4 8.9Z"/></svg>
+  Questions?
+</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Questions about Torchline Cloud">
+  <div class="chat-head">
+    <b>Ask about Torchline Cloud</b>
+    <span>replies in ~1h</span>
+    <button id="chatClose" aria-label="Close">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg">Pricing here is per instance, and a few things need a straight answer — disk, what's
+      included, which size. Pick a question and I'll answer it properly.</div>
+  </div>
+  <div class="chat-q" id="chatQ">
+    <button data-a="Every instance includes Torchflow, the Hermes agents, DNS and TLS, PostgreSQL, Vaultwarden, nightly encrypted backups and monitoring. None of that is an add-on — the only extra line items are disk beyond your tier ($0.25/GB), a dedicated IP ($49/mo), extra backup retention ($5 per 30 days) and AI credit if you'd rather not bring your own key.">What's included?</button>
+    <button data-a="40 GB on the $49 tier, 80 GB at $85, 160 GB at $140 and 320 GB at $249 — plus $0.25 per GB per month beyond that, billed only for what you actually use. Most sites never leave the included disk; media-heavy ones do.">How much disk?</button>
+    <button data-a="4 GB is right for one to three light apps. 8 GB covers around six, including heavier ones like Chatwoot, Baserow or Medusa. 16 GB is where Postiz and Budibase unlock, or several heavy apps at once. You can upgrade in a click and everything moves with you.">Which size do I need?</button>
+    <button data-a="Start small, upgrade later — it's month to month with no contract. If you'd rather try before committing, reply here and we'll set you up with a short trial on a real instance.">Can I try before paying?</button>
+    <button data-a="Yes. If it has a Dockerfile, we containerise it, migrate the database and files, and cut the domain over with a rollback window — a fixed-price setup rather than a subscription. Send the repo and we'll quote it.">I already have an app</button>
+    <button data-a="No developer needed. Describe the app in Torchflow and it builds it, database included. If you get stuck, an onboarding call is included on the larger instances and $75 on the small ones.">Do I need a developer?</button>
+  </div>
+  <div class="chat-foot">Still stuck? <a href="mailto:support@torchflow.ai?subject=Torchline%20Cloud%20question">Email us</a> — a human answers.</div>
+</div>
+
+<script>
+/* support chat */
+(function () {
+  const fab = document.getElementById('chatFab');
+  const panel = document.getElementById('chatPanel');
+  const close = document.getElementById('chatClose');
+  const body = document.getElementById('chatBody');
+  const qs = document.getElementById('chatQ');
+  if (!fab || !panel) return;
+  function toggle(open) {
+    panel.classList.toggle('open', open);
+    fab.setAttribute('aria-expanded', String(open));
+    if (open) panel.querySelector('.chat-body').scrollTop = 0;
+  }
+  fab.addEventListener('click', () => toggle(!panel.classList.contains('open')));
+  close.addEventListener('click', () => toggle(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggle(false); });
+  qs.addEventListener('click', e => {
+    const b = e.target.closest('button[data-a]');
+    if (!b) return;
+    const q = document.createElement('div');
+    q.className = 'chat-msg me';
+    q.textContent = b.textContent;
+    const a = document.createElement('div');
+    a.className = 'chat-msg';
+    a.textContent = b.dataset.a;
+    body.appendChild(q); body.appendChild(a);
+    body.scrollTop = body.scrollHeight;
+  });
 })();
 </script>
 </body>
