@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Torchline Cloud — deploy it, we'll run it</title>
+<meta name="description" content="Managed hosting for the apps your business actually runs on. Build, review, deploy — we handle the servers, the updates, the backups and the monitoring." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — every colour, radius, space and glass value lives here.
+   Change the theme here, not in the components.
+   ============================================================ */
+:root{
+  /* surface */
+  --void:        #04051a;
+  --deep:        #070828;
+  --plum:        #140a33;
+  --plum-2:      #1d0d45;
+  --surface:     rgba(255,255,255,.038);
+  --surface-2:   rgba(255,255,255,.062);
+  --hairline:    rgba(168,140,255,.20);
+  --hairline-2:  rgba(168,140,255,.34);
+
+  /* ink */
+  --ink:         #f4f3ff;
+  --ink-2:       #cdc9ee;
+  --muted:       #918dba;
+  --muted-2:     #6f6b96;
+
+  /* neon */
+  --cyan:        #59e6ff;
+  --violet:      #9a6cff;
+  --magenta:     #ff53d6;
+  --ember:       #ff8a4c;
+  --cyan-dim:    rgba(89,230,255,.16);
+  --violet-dim:  rgba(154,108,255,.16);
+  --magenta-dim: rgba(255,83,214,.14);
+
+  /* type */
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body:    "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* geometry */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --s-1: 6px;  --s-2: 12px; --s-3: 18px; --s-4: 26px;
+  --s-5: 38px; --s-6: 56px; --s-7: 84px; --s-8: 120px;
+  --maxw: 1280px;
+
+  /* effects */
+  --glow-cyan:    0 0 24px rgba(89,230,255,.35);
+  --glow-violet:  0 0 34px rgba(154,108,255,.30);
+  --glow-ember:   0 0 40px rgba(255,138,76,.22);
+  --shadow-lift:  0 24px 60px -20px rgba(4,2,20,.9);
+  --blur:         saturate(140%) blur(18px);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* background field ------------------------------------------------ */
+.field{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(900px 620px at 78% -6%, rgba(255,83,214,.16), transparent 62%),
+    radial-gradient(1000px 700px at 12% 4%, rgba(154,108,255,.20), transparent 60%),
+    radial-gradient(1200px 900px at 50% 108%, rgba(89,230,255,.10), transparent 64%),
+    linear-gradient(180deg, var(--deep) 0%, var(--void) 34%, var(--plum) 78%, #0b0626 100%);
+}
+.grain{
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+main, header, footer{ position:relative; z-index:2; }
+
+.wrap{ width:min(100% - 44px, var(--maxw)); margin-inline:auto; }
+
+/* type ------------------------------------------------------------ */
+h1,h2,h3,h4{ font-family:var(--display); font-weight:600; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+h1{ font-size:clamp(2.6rem, 4.6vw, 5rem); line-height:1.02; letter-spacing:-.035em; font-weight:600; }
+h2{ font-size:clamp(1.8rem, 3vw, 2.6rem); line-height:1.1; }
+h3{ font-size:1.08rem; letter-spacing:-.01em; }
+p{ margin:0; }
+.lede{ font-size:clamp(1.05rem,1.35vw,1.32rem); color:var(--ink-2); line-height:1.62; }
+.eyebrow{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--cyan); display:inline-flex; align-items:center; gap:10px;
+}
+.eyebrow::before{
+  content:""; width:22px; height:1px; background:linear-gradient(90deg,var(--cyan),transparent);
+}
+.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.dim{ color:var(--muted); }
+
+/* nav ------------------------------------------------------------- */
+header{
+  position:sticky; top:0; z-index:20;
+  backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
+  background:linear-gradient(180deg, rgba(6,7,32,.86), rgba(6,7,32,.42));
+  border-bottom:1px solid rgba(168,140,255,.12);
+}
+.nav{ display:flex; align-items:center; gap:var(--s-5); height:70px; }
+.brand{ display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); }
+.brand svg{ display:block; }
+.brand-name{ font-family:var(--display); font-weight:600; font-size:1.02rem; letter-spacing:-.01em; }
+.brand-name span{ color:var(--muted); font-weight:400; }
+.navlinks{ display:flex; gap:var(--s-5); margin-left:auto; }
+.nav > .btn{ margin-left:auto; }
+.navlinks + .btn{ margin-left:0; }
+.navlinks a{
+  color:var(--ink-2); text-decoration:none; font-size:.9rem; letter-spacing:.01em;
+  padding:8px 2px; border-bottom:1px solid transparent; transition:color .18s, border-color .18s;
+}
+.navlinks a:hover, .navlinks a:focus-visible{ color:var(--ink); border-bottom-color:var(--violet); }
+@media (max-width: 900px){ .navlinks{ display:none; } }
+
+/* buttons --------------------------------------------------------- */
+.btn{
+  --btn-bg: transparent; --btn-fg: var(--ink); --btn-bd: var(--hairline-2);
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  min-height:46px; padding:0 22px; border-radius:999px;
+  font-family:var(--body); font-size:.94rem; font-weight:500; letter-spacing:.01em;
+  color:var(--btn-fg); background:var(--btn-bg); border:1px solid var(--btn-bd);
+  text-decoration:none; cursor:pointer; transition:transform .18s, box-shadow .2s, background .2s, border-color .2s;
+}
+.btn:hover{ transform:translateY(-1px); }
+.btn:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+.btn-primary{
+  --btn-fg:#0a0620; --btn-bd:transparent;
+  background:linear-gradient(180deg,#b9f4ff,#5fe3ff 60%,#41c8ee);
+  box-shadow:0 10px 30px -10px rgba(89,230,255,.65), inset 0 1px 0 rgba(255,255,255,.6);
+  font-weight:600;
+}
+.btn-primary:hover{ box-shadow:0 16px 40px -12px rgba(89,230,255,.8), inset 0 1px 0 rgba(255,255,255,.7); }
+.btn-ghost{ background:rgba(255,255,255,.03); }
+.btn-ghost:hover{ background:rgba(255,255,255,.07); border-color:var(--violet); }
+
+/* hero ------------------------------------------------------------ */
+.hero{ position:relative; padding:clamp(30px,5vw,64px) 0 clamp(40px,6vw,80px); overflow:hidden; }
+.hero .wrap{ display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,1.1fr); gap:clamp(20px,4vw,56px); align-items:center; }
+@media (max-width: 980px){ .hero .wrap{ grid-template-columns:1fr; gap:18px; } }
+
+.hero-copy{ max-width:34rem; }
+.hero h1{ margin:18px 0 0; }
+.hero h1 .hot{
+  background:linear-gradient(96deg,#ffd7b0 0%,var(--ember) 26%,var(--magenta) 58%,var(--violet) 82%,var(--cyan) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero .lede{ margin-top:20px; max-width:31rem; }
+.cta-row{ display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.trust{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:26px;
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.trust span{ display:inline-flex; align-items:center; gap:7px; }
+.trust i{ width:5px; height:5px; border-radius:50%; background:var(--cyan); box-shadow:var(--glow-cyan); }
+
+.scene-shell{ position:relative; aspect-ratio: 1 / .92; min-height:340px; }
+#scene{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.scene-halo{
+  position:absolute; inset:-14% -6% -18% -6%; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(154,108,255,.24), transparent 72%);
+  filter:blur(30px);
+}
+
+/* floating pipeline card over the scene */
+.pipe{
+  position:absolute; right:-2%; bottom:-6%; width:min(288px, 76%); pointer-events:none;
+  border:1px solid var(--hairline); border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(19,12,48,.86), rgba(9,8,32,.92));
+  backdrop-filter:blur(10px); box-shadow:var(--shadow-lift);
+  padding:14px 14px 10px;
+}
+.pipe-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.pipe-title{ font-family:var(--mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.pipe-dot{ width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:var(--glow-cyan); animation:pulse 2.6s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
+.step{ display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid rgba(168,140,255,.12); }
+.step:first-of-type{ border-top:0; }
+.step b{ font-weight:500; font-size:.86rem; }
+.step small{ margin-left:auto; font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; }
+.ok{ color:var(--cyan); } .run{ color:var(--violet); } .wait{ color:var(--muted-2); }
+.tick{ width:14px; height:14px; border-radius:50%; border:1px solid currentColor; display:grid; place-items:center; flex:0 0 auto; }
+.tick svg{ width:9px; height:9px; }
+
+/* section furniture ---------------------------------------------- */
+section{ padding:clamp(48px,6.2vw,88px) 0; position:relative; }
+section + section{ border-top:1px solid rgba(168,140,255,.075); }
+.sechead{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.86fr); gap:var(--s-5); align-items:end; margin-bottom:var(--s-6); }
+@media (max-width:880px){ .sechead{ grid-template-columns:1fr; gap:14px; } }
+.sechead p{ color:var(--muted); max-width:38ch; }
+
+/* ecosystem strip ------------------------------------------------ */
+.eco{ display:flex; flex-wrap:wrap; align-items:stretch; gap:0; border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); }
+.eco-item{
+  flex:1 1 200px; padding:22px 22px 24px; border-right:1px solid var(--hairline);
+  display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit; transition:background .2s;
+}
+.eco-item:last-child{ border-right:0; }
+.eco-item:hover{ background:rgba(154,108,255,.06); }
+.eco-item .k{ font-family:var(--mono); font-size:.64rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted-2); }
+.eco-item .n{ font-family:var(--display); font-size:1.06rem; }
+.eco-item .d{ font-size:.86rem; color:var(--muted); line-height:1.5; }
+.eco-item.here{ background:linear-gradient(180deg, rgba(89,230,255,.08), transparent); }
+.eco-item.here .n{ color:var(--cyan); }
+
+/* how (timeline) -------------------------------------------------- */
+.flow{ position:relative; display:grid; gap:0; margin-top:8px; }
+.flow::before{
+  content:""; position:absolute; left:19px; top:14px; bottom:14px; width:1px;
+  background:linear-gradient(180deg, var(--cyan), var(--violet) 45%, var(--magenta) 78%, transparent);
+  opacity:.55;
+}
+.fstep{ display:grid; grid-template-columns:40px minmax(0,1fr); gap:22px; padding:18px 0; }
+.fnum{
+  width:40px; height:40px; border-radius:50%; display:grid; place-items:center;
+  border:1px solid var(--hairline-2); background:var(--deep);
+  font-family:var(--mono); font-size:.78rem; color:var(--cyan);
+  box-shadow:0 0 0 6px var(--void), 0 0 22px rgba(89,230,255,.18);
+  position:relative; z-index:1;
+}
+.fstep h3{ margin-bottom:4px; }
+.fstep p{ color:var(--muted); max-width:62ch; }
+.fstep .tagline{ font-family:var(--mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--violet); margin-bottom:8px; }
+
+/* included panel -------------------------------------------------- */
+.panel{
+  border:1px solid var(--hairline); border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(24,15,58,.55), rgba(8,7,28,.65));
+  padding:clamp(22px,3vw,36px);
+}
+.split{ display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr); gap:clamp(18px,3vw,40px); }
+@media (max-width:860px){ .split{ grid-template-columns:1fr; } }
+.inc-list{ list-style:none; margin:0; padding:0; display:grid; gap:2px; }
+.inc-list li{ display:flex; gap:14px; align-items:flex-start; padding:13px 0; border-bottom:1px solid rgba(168,140,255,.12); }
+.inc-list li:last-child{ border-bottom:0; }
+.inc-list svg{ flex:0 0 auto; margin-top:3px; color:var(--cyan); }
+.inc-list b{ font-weight:500; }
+.inc-list span{ color:var(--muted); }
+.note{ font-size:.86rem; color:var(--muted); border-left:1px solid var(--hairline-2); padding-left:16px; }
+.note strong{ color:var(--ink-2); font-weight:500; }
+
+/* catalog chips --------------------------------------------------- */
+.cat{ display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:10px; }
+.app{
+  display:flex; align-items:center; gap:12px; padding:14px 15px;
+  border:1px solid rgba(168,140,255,.16); border-radius:var(--r-md);
+  background:rgba(255,255,255,.022); transition:border-color .2s, background .2s, transform .2s;
+}
+.app:hover{ border-color:var(--hairline-2); background:rgba(154,108,255,.07); transform:translateY(-1px); }
+.app .mark{ width:26px; height:26px; border-radius:7px; flex:0 0 auto; display:grid; place-items:center;
+  background:linear-gradient(145deg, rgba(89,230,255,.24), rgba(255,83,214,.22)); font-family:var(--mono); font-size:.72rem; color:#fff; }
+.app .nm{ font-size:.9rem; }
+.app .tier{ margin-left:auto; font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); }
+.app.gated .tier{ color:var(--violet); }
+
+/* pricing --------------------------------------------------------- */
+.plans{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; align-items:stretch; }
+@media (max-width:1040px){ .plans{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:600px){ .plans{ grid-template-columns:1fr; } }
+.plan{
+  display:flex; flex-direction:column; gap:2px; padding:24px 22px 22px;
+  border:1px solid rgba(168,140,255,.16); border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+  position:relative;
+}
+.plan.rec{ border-color:rgba(89,230,255,.5); background:linear-gradient(180deg, rgba(89,230,255,.10), rgba(154,108,255,.05)); box-shadow:var(--shadow-lift), 0 0 0 1px rgba(89,230,255,.12) inset; }
+.plan .ram{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.plan .price{ font-family:var(--display); font-size:2.5rem; line-height:1; letter-spacing:-.03em; margin:12px 0 2px; }
+.plan .price sup{ font-size:.9rem; vertical-align:super; letter-spacing:0; color:var(--muted); margin-right:2px; }
+.plan .per{ font-family:var(--mono); font-size:.72rem; color:var(--muted); }
+.plan ul{ list-style:none; margin:18px 0 0; padding:0; display:grid; gap:9px; font-size:.87rem; color:var(--ink-2); }
+.plan li{ display:flex; gap:9px; }
+.plan li::before{ content:"—"; color:var(--violet); }
+.plan .badge{
+  position:absolute; top:-11px; left:22px; font-family:var(--mono); font-size:.6rem; letter-spacing:.14em;
+  text-transform:uppercase; padding:4px 10px; border-radius:999px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet)); color:#0a0620; font-weight:600;
+}
+.addons{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:0; margin-top:26px; border-top:1px solid var(--hairline); }
+.addon{ padding:16px 0 0; padding-right:20px; }
+.addon .v{ font-family:var(--mono); color:var(--cyan); font-size:.86rem; }
+.addon .k{ font-size:.8rem; color:var(--muted); }
+
+/* domains --------------------------------------------------------- */
+.dom{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(20px,4vw,52px); align-items:center; }
+@media (max-width:880px){ .dom{ grid-template-columns:1fr; } }
+.flowline{ border:1px solid var(--hairline); border-radius:var(--r-lg); padding:26px; background:rgba(8,7,28,.55); }
+.flowline .row{ display:flex; align-items:center; gap:12px; padding:12px 0; }
+.flowline .row + .row{ border-top:1px dashed rgba(168,140,255,.22); }
+.flowline .box{
+  flex:1; border:1px solid var(--hairline); border-radius:10px; padding:10px 12px;
+  font-family:var(--mono); font-size:.76rem; color:var(--ink-2); background:rgba(255,255,255,.03);
+}
+.flowline .box small{ display:block; color:var(--muted-2); font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+.arrow{ color:var(--cyan); flex:0 0 auto; }
+
+/* partners -------------------------------------------------------- */
+.partners{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:16px; }
+@media (max-width:880px){ .partners{ grid-template-columns:1fr; } }
+.pcard{ border:1px solid var(--hairline); border-radius:var(--r-lg); padding:clamp(22px,3vw,34px); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); }
+.pcard.alt{ background:linear-gradient(180deg, rgba(255,83,214,.09), rgba(154,108,255,.05)); border-color:rgba(255,83,214,.28); }
+.pcard .big{ font-family:var(--display); font-size:2.9rem; line-height:1; letter-spacing:-.04em; margin:10px 0 6px; }
+.pcard .big em{ font-style:normal; font-size:1rem; color:var(--muted); letter-spacing:0; }
+.pcard ul{ list-style:none; padding:0; margin:16px 0 0; display:grid; gap:8px; font-size:.88rem; color:var(--ink-2); }
+.pcard li{ display:flex; gap:9px; }
+.pcard li::before{ content:"·"; color:var(--magenta); }
+
+/* faq ------------------------------------------------------------- */
+details{ border-bottom:1px solid rgba(168,140,255,.14); }
+summary{
+  cursor:pointer; list-style:none; padding:18px 0; display:flex; align-items:center; gap:14px;
+  font-family:var(--display); font-size:1.02rem; letter-spacing:-.01em;
+}
+summary::-webkit-details-marker{ display:none; }
+summary .plus{ margin-left:auto; color:var(--violet); font-family:var(--mono); transition:transform .2s; }
+details[open] summary .plus{ transform:rotate(45deg); }
+details p{ padding:0 0 20px; color:var(--muted); max-width:70ch; }
+
+/* final cta ------------------------------------------------------- */
+.final{ text-align:center; padding:clamp(70px,10vw,130px) 0; position:relative; overflow:hidden; }
+.final::before{
+  content:""; position:absolute; left:50%; top:38%; width:min(900px,120vw); aspect-ratio:1;
+  transform:translate(-50%,-50%); pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,138,76,.16), rgba(255,83,214,.10) 42%, transparent 70%);
+  filter:blur(24px);
+}
+.final h2{ font-size:clamp(2rem,4vw,3.2rem); position:relative; }
+.final p{ color:var(--ink-2); max-width:52ch; margin:16px auto 0; position:relative; }
+.final .cta-row{ justify-content:center; position:relative; }
+
+/* footer ---------------------------------------------------------- */
+footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:var(--muted); font-size:.85rem; }
+.fgrid{ display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between; }
+.fcol{ display:grid; gap:7px; align-content:start; }
+.fcol b{ color:var(--ink-2); font-weight:500; font-family:var(--mono); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; margin-bottom:4px; }
+.fcol a{ color:var(--muted); text-decoration:none; }
+.fcol a:hover{ color:var(--ink); }
+.legal{ margin-top:36px; padding-top:20px; border-top:1px solid rgba(168,140,255,.1); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; font-size:.78rem; color:var(--muted-2); }
+
+/* mobile ---------------------------------------------------------- */
+@media (max-width: 700px){
+  .wrap{ width:min(100% - 34px, var(--maxw)); }
+  .brand-name span{ display:none; }
+  .nav{ height:62px; gap:12px; }
+  .nav > .btn{ min-height:40px; padding:0 16px; font-size:.85rem; }
+  .pipe{ display:none; }
+  .scene-shell{ aspect-ratio: 1 / .68; min-height:220px; margin-top:6px; }
+  .hero{ padding-top:16px; }
+  .eco-item{ flex:1 1 100%; border-right:0; border-bottom:1px solid var(--hairline); }
+  .eco-item:last-child{ border-bottom:0; }
+  .trust{ gap:6px 14px; font-size:.68rem; }
+  .plan .price{ font-size:2.1rem; }
+  .addons{ grid-template-columns:1fr 1fr; }
+  .addon{ padding-right:0; }
+  h1{ font-size:clamp(2.3rem, 9vw, 3rem); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="field"></div>
+<div class="grain"></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Torchline Cloud home">
+      <svg width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="fl" x1="13" y1="0" x2="13" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFD9B8"/><stop offset=".34" stop-color="#FF8A4C"/>
+            <stop offset=".68" stop-color="#FF53D6"/><stop offset="1" stop-color="#9A6CFF"/>
+          </linearGradient>
+        </defs>
+        <path d="M13 0.8c3.6 5.2 8.2 8.3 8.2 14.4 0 5.2-3.5 9.3-8.2 12-4.7-2.7-8.2-6.8-8.2-12C4.8 9.1 9.4 6 13 .8Z" stroke="url(#fl)" stroke-width="1.5" fill="rgba(255,138,76,.08)"/>
+        <path d="M13 8.4c1.9 2.7 4.1 4.3 4.1 7.4 0 2.6-1.7 4.7-4.1 6-2.4-1.3-4.1-3.4-4.1-6 0-3.1 2.2-4.7 4.1-7.4Z" fill="url(#fl)" opacity=".85"/>
+      </svg>
+      <span class="brand-name">Torchline <span>Cloud</span></span>
+    </a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#included">What's included</a>
+      <a href="#catalog">Catalog</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#partners">Partners</a>
+    </nav>
+    <a class="btn btn-primary" href="#pricing">Start deploying</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Torchline Cloud · managed hosting</span>
+        <h1>Deploy it.<br><span class="hot">We'll run it.</span></h1>
+        <p class="lede">Host the apps your business actually runs on. Build in Torchflow, review it, push it to
+          our cloud — and we take over the servers, the updates, the backups and the monitoring. No terminal,
+          no Docker homework, no 2am rebuilds.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#pricing">Deploy in ~15 minutes</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <div class="trust">
+          <span><i></i>From $49/mo</span>
+          <span><i></i>Vaultwarden + database included</span>
+          <span><i></i>No SSH required</span>
+        </div>
+      </div>
+
+      <div class="scene-shell">
+        <div class="scene-halo"></div>
+        <canvas id="scene" aria-label="A glowing cloud of circuit traces over a datacenter floor" role="img"></canvas>
+        <div class="pipe" aria-hidden="true">
+          <div class="pipe-head">
+            <span class="pipe-title">your deploy</span>
+            <span class="pipe-dot"></span>
+          </div>
+          <div class="step"><span class="tick ok"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 5.2 4 7.6 8.6 2.6"/></svg></span><b>Build</b><small class="ok">done</small></div>
+          <div class="step"><span class="tick ok"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1.5 5.2 4 7.6 8.6 2.6"/></svg></span><b>Review</b><small class="ok">done</small></div>
+          <div class="step"><span class="tick run"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="5" r="2.4"/></svg></span><b>Deploy</b><small class="run">live</small></div>
+          <div class="step"><span class="tick wait"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5h6"/></svg></span><b>Monitoring</b><small class="wait">ours</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECOSYSTEM -->
+  <div class="wrap">
+    <div class="eco">
+      <a class="eco-item" href="#how">
+        <span class="k">01 — Build</span>
+        <span class="n">Torchflow</span>
+        <span class="d">Generate or assemble the app. Prompt it, wire the integrations, keep the code.</span>
+      </a>
+      <div class="eco-item here">
+        <span class="k">02 — Host</span>
+        <span class="n">Torchline Cloud</span>
+        <span class="d">Where it runs. Capacity, databases, backups, TLS, monitoring and a UI you don't need a terminal for.</span>
+      </div>
+      <a class="eco-item" href="#included">
+        <span class="k">03 — Operate</span>
+        <span class="n">Agents</span>
+        <span class="d">Hermes agents watch the instance, answer on your AI credit, and file the tickets you'd otherwise file.</span>
+      </a>
+      <a class="eco-item" href="#domains">
+        <span class="k">04 — Connect</span>
+        <span class="n">Your DNS</span>
+        <span class="d">Keep Cloudflare or use ours. A CNAME, a certificate, done.</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">The whole loop</span>
+          <h2 style="margin-top:14px">Build, review, deploy.<br>Then it's our problem.</h2>
+        </div>
+        <p>Most hosting hands you an empty server and a wiki. We hand you a finished instance and stay
+          responsible for it — including the parts that break at 3am.</p>
+      </div>
+
+      <div class="flow">
+        <div class="fstep">
+          <div class="fnum">01</div>
+          <div>
+            <div class="tagline">Build</div>
+            <h3>Start from the catalog, or bring the project you already have.</h3>
+            <p>Pick a supported app — a storefront, a helpdesk, an automation runner, a document signer — or
+              bring your own repo and we containerise, build and deploy it for you.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">02</div>
+          <div>
+            <div class="tagline">Review</div>
+            <h3>Staging on a real domain before anything is public.</h3>
+            <p>Every deploy lands on a preview URL with a real certificate. Click through it, show the client,
+              break it on purpose. Promote only when you're happy.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">03</div>
+          <div>
+            <div class="tagline">Deploy</div>
+            <h3>One click to your domain, or ours.</h3>
+            <p>Promotion swaps traffic, keeps the previous release for instant rollback, and issues TLS. You
+              never touch a server, a firewall rule or a certbot log.</p>
+          </div>
+        </div>
+        <div class="fstep">
+          <div class="fnum">04</div>
+          <div>
+            <div class="tagline">Operate</div>
+            <h3>We watch it, patch it, back it up and answer for it.</h3>
+            <p>Nightly encrypted backups, uptime checks, dependency updates, and a human on the other end of
+              support. If the box degrades, we see it before your customers do.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDED -->
+  <section id="included">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">Every instance</span>
+          <h2 style="margin-top:14px">The boring things,<br>already done.</h2>
+        </div>
+        <p>These aren't add-ons or an upsell. They're the reason there's a base fee at all — and the reason
+          you don't need to hire anyone for them.</p>
+      </div>
+
+      <div class="panel split">
+        <ul class="inc-list">
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>Vaultwarden.</b> <span>Team password manager on your own instance. Included on every size, not a licence line.</span></div>
+          </li>
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>A database.</b> <span>PostgreSQL provisioned with your instance, or the connection details to plug your app into it.</span></div>
+          </li>
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>Encrypted nightly backups.</b> <span>Offsite, versioned, restorable from the UI. Tested restores, not just "backups enabled".</span></div>
+          </li>
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>TLS and DNS.</b> <span>Certificates issued and renewed for you, on your domain or a subdomain of ours.</span></div>
+          </li>
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>Uptime and resource monitoring.</b> <span>Memory, disk and app health, visible in your desktop and watched by us.</span></div>
+          </li>
+          <li>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8.4 6 12.4 14 3.6"/></svg>
+            <div><b>Updates and patching.</b> <span>Base images, security patches and app upgrades handled on a maintenance window.</span></div>
+          </li>
+        </ul>
+        <div style="display:grid; gap:18px; align-content:start">
+          <p class="note"><strong>What you don't get:</strong> shell access, root, or a Docker console. That's
+            deliberate. It's what keeps an instance reproducible and keeps "I broke it at 2am" from being your
+            weekend.</p>
+          <p class="note"><strong>What you do get:</strong> logs, environment variables, restart, app file
+            browser, database browser and a one-click upgrade — all in the desktop UI.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="catalog">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">Catalog</span>
+          <h2 style="margin-top:14px">Supported, maintained,<br>and known to work together.</h2>
+        </div>
+        <p>Every app here is one we deploy and maintain. Heavier apps need more room, so they unlock as your
+          instance grows — no surprises halfway through an install.</p>
+      </div>
+
+      <div class="cat">
+        <div class="app"><span class="mark">N</span><span class="nm">Next.js / Node app</span><span class="tier">4 GB+</span></div>
+        <div class="app"><span class="mark">n8</span><span class="nm">n8n</span><span class="tier">4 GB+</span></div>
+        <div class="app"><span class="mark">DS</span><span class="nm">DocuSeal</span><span class="tier">4 GB+</span></div>
+        <div class="app"><span class="mark">V</span><span class="nm">Vaultwarden</span><span class="tier">included</span></div>
+        <div class="app gated"><span class="mark">Cw</span><span class="nm">Chatwoot</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><span class="mark">Br</span><span class="nm">Baserow</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><span class="mark">Md</span><span class="nm">Medusa</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><span class="mark">Du</span><span class="nm">Directus</span><span class="tier">8 GB+</span></div>
+        <div class="app gated"><span class="mark">Pz</span><span class="nm">Postiz</span><span class="tier">16 GB+</span></div>
+        <div class="app gated"><span class="mark">Bb</span><span class="nm">Budibase</span><span class="tier">16 GB+</span></div>
+        <div class="app"><span class="mark">He</span><span class="nm">Hermes agents</span><span class="tier">AI credit</span></div>
+        <div class="app"><span class="mark">+</span><span class="nm">Your own repo</span><span class="tier">migration</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">Pricing</span>
+          <h2 style="margin-top:14px">One number per instance.<br>No feature gates.</h2>
+        </div>
+        <p>You're buying capacity, not permission slips. Pick the RAM you need; every app, the database,
+          Vaultwarden, backups and monitoring are included at every size.</p>
+      </div>
+
+      <div class="plans">
+        <div class="plan">
+          <span class="ram">4 GB · 2 vCPU</span>
+          <div class="price"><sup>$</sup>49</div>
+          <span class="per">per month · 40 GB disk</span>
+          <ul>
+            <li>1–3 light apps</li>
+            <li>Database + Vaultwarden</li>
+            <li>Nightly encrypted backups</li>
+            <li>TLS on your domain</li>
+          </ul>
+        </div>
+        <div class="plan rec">
+          <span class="badge">Most deployments</span>
+          <span class="ram">8 GB · 4 vCPU</span>
+          <div class="price"><sup>$</sup>85</div>
+          <span class="per">per month · 80 GB disk</span>
+          <ul>
+            <li>Up to ~6 apps</li>
+            <li>Heavier apps unlocked</li>
+            <li>30-day backup retention</li>
+            <li>Staging environment</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <span class="ram">16 GB · 8 vCPU</span>
+          <div class="price"><sup>$</sup>140</div>
+          <span class="per">per month · 160 GB disk</span>
+          <ul>
+            <li>Multiple heavy apps</li>
+            <li>Postiz, Budibase, Directus</li>
+            <li>Priority support window</li>
+            <li>Custom domains</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <span class="ram">32 GB · 16 vCPU</span>
+          <div class="price"><sup>$</sup>249</div>
+          <span class="per">per month · 320 GB disk</span>
+          <ul>
+            <li>Whole-company instance</li>
+            <li>Up to ~16 apps</li>
+            <li>Onboarding call included</li>
+            <li>Named contact</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="addons">
+        <div class="addon"><div class="v">$0.25 / GB / mo</div><div class="k">Extra disk beyond your tier</div></div>
+        <div class="addon"><div class="v">$49 / mo</div><div class="k">Dedicated IPv4 (shared included)</div></div>
+        <div class="addon"><div class="v">$5 / mo</div><div class="k">Extra 30 days of backup retention</div></div>
+        <div class="addon"><div class="v">$0.02 / GB / mo</div><div class="k">Object storage for media and exports</div></div>
+        <div class="addon"><div class="v">from $10</div><div class="k">AI credit — or bring your own key, free</div></div>
+        <div class="addon"><div class="v">+$100 / mo</div><div class="k">White-label, plus $499 setup</div></div>
+      </div>
+
+      <p class="note" style="margin-top:28px; max-width:70ch">
+        <strong>AI on your instance.</strong> Every instance ships with an AI key. Bring your own OpenRouter
+        or provider key and pay nothing to us — or buy credit from us from $10 and we handle the top-ups,
+        limits and per-app metering. Same key works for your apps, your automations and your agents.
+      </p>
+    </div>
+  </section>
+
+  <!-- DOMAINS -->
+  <section id="domains">
+    <div class="wrap">
+      <div class="dom">
+        <div>
+          <span class="eyebrow">Domains &amp; DNS</span>
+          <h2 style="margin-top:14px">Your domain stays yours.</h2>
+          <p class="lede" style="margin-top:16px; font-size:1.02rem">
+            Point a CNAME at us and we issue the certificate automatically. You keep your Cloudflare account,
+            your DNS records and your ability to leave — we never need registrar access.</p>
+          <p class="note" style="margin-top:22px">Prefer we hold the zone? We'll run it on our Cloudflare and
+            you still keep ownership of the name. Either way, no downtime at cutover.</p>
+        </div>
+        <div class="flowline">
+          <div class="row">
+            <div class="box"><small>your DNS</small>app.yourcompany.com</div>
+            <span class="arrow">
+              <svg width="26" height="10" viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 5h22M18 1.5 22.5 5 18 8.5"/></svg>
+            </span>
+            <div class="box"><small>record</small>CNAME → edge</div>
+          </div>
+          <div class="row">
+            <div class="box"><small>we do</small>certificate + TLS</div>
+            <span class="arrow">
+              <svg width="26" height="10" viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 5h22M18 1.5 22.5 5 18 8.5"/></svg>
+            </span>
+            <div class="box"><small>result</small>https, renewed</div>
+          </div>
+          <div class="row">
+            <div class="box"><small>your box</small>instance, isolated</div>
+            <span class="arrow">
+              <svg width="26" height="10" viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 5h22M18 1.5 22.5 5 18 8.5"/></svg>
+            </span>
+            <div class="box"><small>never</small>shared with tenants</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section id="partners">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">Partners</span>
+          <h2 style="margin-top:14px">Sell it as ours,<br>or sell it as yours.</h2>
+        </div>
+        <p>Two programs, both simple. Refer a client and get paid for as long as they stay — or put your own
+          brand on the whole thing and set your own price.</p>
+      </div>
+
+      <div class="partners">
+        <div class="pcard">
+          <span class="mono dim" style="font-size:.68rem; letter-spacing:.16em; text-transform:uppercase">Reseller</span>
+          <div class="big">30% <em>of the subscription, for the life of the client</em></div>
+          <ul>
+            <li>Recurring, not a one-off bounty — paid every month they stay</li>
+            <li>10% on storage, IP and retention add-ons</li>
+            <li>We bill, we support, we carry the infrastructure</li>
+            <li>Your client sees Torchline Cloud</li>
+            <li>Five clients in, you convert to wholesale automatically</li>
+          </ul>
+        </div>
+        <div class="pcard alt">
+          <span class="mono dim" style="font-size:.68rem; letter-spacing:.16em; text-transform:uppercase">White-label</span>
+          <div class="big">40% <em>off list, your brand, your price</em></div>
+          <ul>
+            <li>Our name never appears</li>
+            <li>You bill your client, you set the retail price</li>
+            <li>You handle first-line support, we take the infrastructure</li>
+            <li>$499 setup · floor of 3 instances or $250/mo</li>
+            <li>Custom logo, colours and domain</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:24px; max-width:72ch"><strong>One honest exclusion:</strong> partner
+        commission doesn't apply to AI credit. The margin on inference is thin enough that a revenue share
+        would make it a loss. White-label partners can resell AI credit at their own markup — that margin is
+        theirs.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap" style="max-width:900px">
+      <span class="eyebrow">Questions</span>
+      <h2 style="margin:14px 0 30px">The ones people actually ask.</h2>
+
+      <details open>
+        <summary>How long does it take to get an instance?<span class="plus">+</span></summary>
+        <p>About fifteen minutes, unattended. You land in your desktop within seconds of paying and watch the
+          build happen — server, base stack, database, then your apps. No ticket, no waiting for us to be at a
+          keyboard.</p>
+      </details>
+      <details>
+        <summary>What if I already have an app and a repo?<span class="plus">+</span></summary>
+        <p>That's a migration, and we do it as a fixed-price setup: we containerise your app, import your
+          database and files, point your domain over with a rollback window, and hand you the instance. It
+          needs a Dockerfile-able app, data under about 50 GB and a database we already run. If it doesn't fit
+          those, we'll tell you before you pay.</p>
+      </details>
+      <details>
+        <summary>Do I get SSH?<span class="plus">+</span></summary>
+        <p>No — and that's the product. You get logs, environment variables, restart, a file browser, a
+          database browser and deployments from the UI. Everything you need to run the app, nothing that lets
+          you take the box down for everyone else on it.</p>
+      </details>
+      <details>
+        <summary>What happens if my app outgrows the instance?<span class="plus">+</span></summary>
+        <p>You upgrade in the UI and we resize it during a short maintenance window. Your data, domains and
+          configuration move with it. Growth is a bigger box, not a new line item.</p>
+      </details>
+      <details>
+        <summary>Can I run adult content?<span class="plus">+</span></summary>
+        <p>Not on the shared cloud. Legal adult brands are hosted on a separate provider, with their own IP,
+          separate payment rails and an age gate — priced +$50/mo. Ask before you deploy, not after.</p>
+      </details>
+      <details>
+        <summary>Is there a contract or SLA?<span class="plus">+</span></summary>
+        <p>Month to month, cancel any time. No SLA: we promise monitored, backed up and best effort, in
+          writing, and we'd rather say that plainly than publish a 99.9% we can't back with a credit.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="wrap">
+      <h2>Stop running around after your own infrastructure.</h2>
+      <p>Pick a size, point your domain, and let the deploy be somebody else's problem for once.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#pricing">Start deploying — from $49/mo</a>
+        <a class="btn btn-ghost" href="#partners">Become a partner</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fcol" style="max-width:320px">
+        <div class="brand" style="margin-bottom:8px">
+          <svg width="20" height="23" viewBox="0 0 26 30" fill="none" aria-hidden="true">
+            <path d="M13 0.8c3.6 5.2 8.2 8.3 8.2 14.4 0 5.2-3.5 9.3-8.2 12-4.7-2.7-8.2-6.8-8.2-12C4.8 9.1 9.4 6 13 .8Z" stroke="#FF8A4C" stroke-width="1.5" fill="rgba(255,138,76,.08)"/>
+            <path d="M13 8.4c1.9 2.7 4.1 4.3 4.1 7.4 0 2.6-1.7 4.7-4.1 6-2.4-1.3-4.1-3.4-4.1-6 0-3.1 2.2-4.7 4.1-7.4Z" fill="#FF8A4C" opacity=".85"/>
+          </svg>
+          <span class="brand-name">Torchline <span>Cloud</span></span>
+        </div>
+        <span style="color:var(--muted-2)">Managed hosting for the apps a business actually runs on.
+          A Torchline product.</span>
+      </div>
+      <div class="fcol">
+        <b>Platform</b>
+        <a href="#how">How it works</a>
+        <a href="#included">What's included</a>
+        <a href="#catalog">Catalog</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="fcol">
+        <b>Company</b>
+        <a href="#partners">Partners</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://torchflow.ai">Torchflow</a>
+        <a href="https://torchline.io">Torchline</a>
+      </div>
+      <div class="fcol">
+        <b>Account</b>
+        <a href="#pricing">Sign in</a>
+        <a href="#pricing">Status</a>
+        <a href="#pricing">Support</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Torchline Cloud · Vespera World LLC</span>
+      <span>Terms · Privacy · DPA · Subprocessors</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   Hero scene — neon glass cloud, circuit traces, datacenter floor.
+   The cloud is rendered once into a sprite (union silhouette + rim
+   light), then blitted each frame. Traces, packets and the floor
+   animate on top. Pointer parallax, reduced-motion aware.
+   ========================================================= */
+(function () {
+  const canvas = document.getElementById('scene');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const TAU = Math.PI * 2;
+
+  let W = 0, H = 0, DPR = 1;
+  let px = 0, py = 0, tx = 0, ty = 0;
+  let sprite = null;
+
+  const CYAN = 'rgba(89,230,255,', VIOLET = 'rgba(154,108,255,', MAG = 'rgba(255,83,214,';
+
+  // cloud lobes in unit space
+  const lobes = [
+    { x: -0.68, y: 0.13, r: 0.29 },
+    { x: -0.27, y: -0.05, r: 0.39 },
+    { x: 0.08, y: -0.25, r: 0.33 },
+    { x: 0.42, y: -0.04, r: 0.31 },
+    { x: 0.70, y: 0.12, r: 0.22 },
+    { x: 0.12, y: 0.19, r: 0.35 },
+    { x: -0.32, y: 0.25, r: 0.25 }
+  ];
+
+  const particles = [];
+  const traces = [
+    { x: 0.06, y: 0.58, ex: -0.86, ey: 0.52, phase: 0.0, speed: 0.30 },
+    { x: 0.68, y: 0.52, ex: 0.94, ey: 0.24, phase: 1.7, speed: 0.42 },
+    { x: 0.44, y: 0.64, ex: 0.34, ey: 0.94, phase: 3.1, speed: 0.36 },
+    { x: -0.60, y: 0.30, ex: -0.96, ey: 0.04, phase: 4.4, speed: 0.26 }
+  ];
+
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const mk = (w, h) => {
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(w * DPR));
+    c.height = Math.max(1, Math.round(h * DPR));
+    const g = c.getContext('2d');
+    g.scale(DPR, DPR);
+    return { c, g, w, h };
+  };
+
+  function lobesPath(g, cx, cy, s, k) {
+    g.beginPath();
+    for (const l of lobes) {
+      const x = cx + l.x * s * k, y = cy + l.y * s * k, r = l.r * s * k;
+      g.moveTo(x + r, y);
+      g.arc(x, y, r, 0, TAU);
+    }
+  }
+
+  function buildCloudSprite(s) {
+    const pad = s * 0.62;
+    const w = 2.0 * s + pad * 2;
+    const h = 1.75 * s + pad * 2;
+    const cx = w / 2, cy = h / 2;
+
+    const out = mk(w, h);
+    const g = out.g;
+
+    // atmospheric glow
+    const glow = g.createRadialGradient(cx, cy, s * 0.05, cx, cy, s * 1.35);
+    glow.addColorStop(0, VIOLET + '0.26)');
+    glow.addColorStop(0.45, MAG + '0.10)');
+    glow.addColorStop(0.75, CYAN + '0.05)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = glow;
+    g.fillRect(0, 0, w, h);
+
+    // glass body
+    g.save();
+    lobesPath(g, cx, cy, s, 1);
+    g.clip();
+    const fill = g.createLinearGradient(cx - s, cy - s * 0.9, cx + s, cy + s * 0.9);
+    fill.addColorStop(0, 'rgba(89,230,255,0.20)');
+    fill.addColorStop(0.42, 'rgba(130,140,255,0.13)');
+    fill.addColorStop(1, 'rgba(255,83,214,0.17)');
+    g.fillStyle = fill;
+    g.fillRect(0, 0, w, h);
+
+    // circuit traces etched into the glass
+    const step = Math.max(10, s * 0.062);
+    g.lineWidth = 0.9;
+    for (let gx = cx - s * 1.3; gx < cx + s * 1.3; gx += step) {
+      for (let gy = cy - s * 1.2; gy < cy + s * 1.2; gy += step) {
+        const hv = Math.abs(Math.sin(gx * 12.9898 + gy * 78.233) * 43758.5453) % 1;
+        if (hv > 0.74) {
+          g.strokeStyle = (hv > 0.94 ? MAG : hv > 0.87 ? VIOLET : CYAN) + '0.46)';
+          g.beginPath();
+          g.moveTo(gx, gy);
+          if (hv > 0.86) { g.lineTo(gx + step * 1.7, gy); g.lineTo(gx + step * 1.7, gy + step * 0.9); }
+          else { g.lineTo(gx, gy + step * 1.7); }
+          g.stroke();
+          g.beginPath();
+          g.arc(gx, gy, 1.1, 0, TAU);
+          g.fillStyle = 'rgba(220,245,255,0.35)';
+          g.fill();
+        }
+      }
+    }
+    // soft inner highlights per lobe
+    for (const l of lobes) {
+      const hx = cx + l.x * s, hy = cy + l.y * s - l.r * s * 0.35;
+      const hg = g.createRadialGradient(hx, hy, 0, hx, hy, l.r * s * 0.9);
+      hg.addColorStop(0, 'rgba(255,255,255,0.10)');
+      hg.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = hg;
+      g.fillRect(hx - l.r * s, hy - l.r * s, l.r * s * 2, l.r * s * 2);
+    }
+    g.restore();
+
+    // ---- rim: union boundary only (outer circle minus an eroded copy) ----
+    const A = mk(w, h), B = mk(w, h);
+    A.g.fillStyle = '#fff';
+    lobesPath(A.g, cx, cy, s, 1);
+    A.g.fill();
+    B.g.fillStyle = '#fff';
+    lobesPath(B.g, cx, cy, s, 0.944);
+    B.g.fill();
+    A.g.globalCompositeOperation = 'destination-out';
+    A.g.drawImage(B.c, 0, 0, w, h);
+    A.g.globalCompositeOperation = 'source-in';
+    const rim = A.g.createLinearGradient(cx - s * 1.05, cy - s * 0.95, cx + s * 1.05, cy + s * 0.95);
+    rim.addColorStop(0, 'rgba(190,250,255,1)');
+    rim.addColorStop(0.30, 'rgba(89,230,255,0.95)');
+    rim.addColorStop(0.58, 'rgba(160,140,255,0.9)');
+    rim.addColorStop(0.82, 'rgba(255,83,214,0.95)');
+    rim.addColorStop(1, 'rgba(255,170,140,0.9)');
+    A.g.fillStyle = rim;
+    A.g.fillRect(0, 0, w, h);
+
+    // thickness: an offset copy of the ring under the bright one reads as a
+    // translucent body with edge depth rather than a flat sticker
+    g.globalCompositeOperation = 'source-over';
+    g.globalAlpha = 0.50;
+    g.drawImage(A.c, 0, s * 0.016, w, h);
+    g.globalAlpha = 1;
+
+    // top sheen inside the glass
+    g.save();
+    lobesPath(g, cx, cy, s, 1);
+    g.clip();
+    const sheen = g.createLinearGradient(0, cy - s, 0, cy + s * 0.25);
+    sheen.addColorStop(0, 'rgba(255,255,255,0.16)');
+    sheen.addColorStop(0.55, 'rgba(200,230,255,0.04)');
+    sheen.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = sheen;
+    g.fillRect(0, 0, w, h);
+    g.restore();
+
+    // satellite nodes
+    const sats = [
+      { dx: -0.96, dy: 0.30, r: 0.045, col: CYAN },
+      { dx: -0.88, dy: -0.24, r: 0.030, col: VIOLET },
+      { dx: 0.94, dy: -0.10, r: 0.038, col: MAG },
+      { dx: 0.86, dy: 0.44, r: 0.026, col: CYAN }
+    ];
+    g.globalCompositeOperation = 'lighter';
+    for (const sat of sats) {
+      const xx = cx + sat.dx * s, yy = cy + sat.dy * s, rr = Math.max(2.2, sat.r * s);
+      g.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        const px2 = xx + Math.cos(a) * rr, py2 = yy + Math.sin(a) * rr;
+        i ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
+      }
+      g.closePath();
+      g.strokeStyle = sat.col + '0.75)';
+      g.lineWidth = 1.1;
+      g.stroke();
+      g.fillStyle = sat.col + '0.10)';
+      g.fill();
+      g.beginPath();
+      g.arc(xx, yy, 1.6, 0, TAU);
+      g.fillStyle = 'rgba(255,255,255,0.85)';
+      g.fill();
+    }
+
+    // bloom passes
+    g.globalCompositeOperation = 'lighter';
+    g.filter = 'blur(' + (s * 0.10).toFixed(1) + 'px)';
+    g.globalAlpha = 0.85;
+    g.drawImage(A.c, 0, 0, w, h);
+    g.filter = 'blur(' + (s * 0.035).toFixed(1) + 'px)';
+    g.globalAlpha = 0.75;
+    g.drawImage(A.c, 0, 0, w, h);
+    g.filter = 'none';
+    g.globalAlpha = 1;
+    g.drawImage(A.c, 0, 0, w, h);
+
+    // reflection under the cloud
+    g.save();
+    g.globalAlpha = 0.22;
+    g.translate(0, cy * 2 + s * 0.06);
+    g.scale(1, -0.55);
+    g.filter = 'blur(' + (s * 0.05).toFixed(1) + 'px)';
+    g.drawImage(A.c, 0, 0, w, h);
+    g.restore();
+    g.filter = 'none';
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+
+    return out;
+  }
+
+  function buildParticles() {
+    particles.length = 0;
+    const n = Math.min(Math.round((W * H) / 17000), 180);
+    for (let i = 0; i < n; i++) {
+      particles.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: rnd(0.4, 1.5), a: rnd(0.12, 0.7),
+        vy: rnd(-0.12, -0.02), vx: rnd(-0.04, 0.04),
+        hue: Math.random() > 0.5 ? CYAN : VIOLET
+      });
+    }
+  }
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = rect.width; H = rect.height;
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    buildParticles();
+    sprite = buildCloudSprite(Math.min(W, H) * 0.305);
+    if (reduce) draw(0, true);
+  }
+
+  function drawBeams(cx, cy, s) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 3; i++) {
+      const bx = cx + (i - 1) * s * 0.62;
+      const g = ctx.createLinearGradient(bx, cy - s * 1.2, bx, H);
+      g.addColorStop(0, (i === 1 ? VIOLET + '0.14)' : CYAN + '0.07)'));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      const w = s * (i === 1 ? 0.30 : 0.17);
+      ctx.beginPath();
+      ctx.moveTo(bx - w * 0.22, cy - s * 1.05);
+      ctx.lineTo(bx + w * 0.22, cy - s * 1.05);
+      ctx.lineTo(bx + w, H);
+      ctx.lineTo(bx - w, H);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawFloor(cx, cy, s) {
+    const horizon = H * 0.78;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 9; i++) {
+      const k = i / 9;
+      const y = horizon + Math.pow(k, 2.1) * (H - horizon) * 0.95;
+      if (y > H) continue;
+      ctx.strokeStyle = VIOLET + (0.05 + k * 0.07).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    for (let i = -7; i <= 7; i++) {
+      ctx.strokeStyle = VIOLET + '0.075)';
+      ctx.beginPath();
+      ctx.moveTo(cx + i * s * 0.05, horizon);
+      ctx.lineTo(cx + i * s * 0.30, H);
+      ctx.stroke();
+    }
+    const glow = ctx.createRadialGradient(cx, horizon + 6, 4, cx, horizon + 6, s * 0.9);
+    glow.addColorStop(0, CYAN + '0.13)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(cx - s, horizon, s * 2, H - horizon);
+    ctx.restore();
+  }
+
+  function drawTraces(t, cx, cy, s) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (const tr of traces) {
+      const sx = cx + tr.x * s, sy = cy + tr.y * s;
+      const ex = cx + tr.ex * s, ey = cy + tr.ey * s;
+      const mx = (sx + ex) / 2, my = (sy + ey) / 2 - s * 0.20;
+
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.quadraticCurveTo(mx, my, ex, ey);
+      ctx.lineWidth = 1.1;
+      ctx.strokeStyle = CYAN + '0.20)';
+      ctx.stroke();
+
+      const pulse = 0.6 + 0.4 * Math.sin(t * 1.6 + tr.phase);
+      ctx.beginPath(); ctx.arc(ex, ey, 8.5, 0, TAU);
+      ctx.fillStyle = MAG + (0.16 * pulse).toFixed(3) + ')'; ctx.fill();
+      ctx.beginPath(); ctx.arc(ex, ey, 2.6, 0, TAU);
+      ctx.fillStyle = MAG + '0.95)'; ctx.fill();
+
+      const k = (t * tr.speed + tr.phase) % 1;
+      const ix = (1 - k) * (1 - k) * sx + 2 * (1 - k) * k * mx + k * k * ex;
+      const iy = (1 - k) * (1 - k) * sy + 2 * (1 - k) * k * my + k * k * ey;
+      ctx.beginPath(); ctx.arc(ix, iy, 8, 0, TAU);
+      ctx.fillStyle = CYAN + '0.14)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(ix, iy, 2.1, 0, TAU);
+      ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawParticles() {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -6) { p.y = H + 6; p.x = Math.random() * W; }
+      if (p.x < -6) p.x = W + 6;
+      if (p.x > W + 6) p.x = -6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, TAU);
+      ctx.fillStyle = p.hue + p.a + ')';
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function draw(t, still) {
+    ctx.clearRect(0, 0, W, H);
+    const s = Math.min(W, H) * 0.305;
+    const cx = W * 0.47 + px * 12;
+    const cy = H * 0.40 + py * 9;
+
+    drawBeams(cx, cy, s);
+    drawFloor(cx, cy, s);
+    drawTraces(t, cx, cy, s);
+    if (sprite) ctx.drawImage(sprite.c, cx - sprite.w / 2, cy - sprite.h / 2, sprite.w, sprite.h);
+    drawParticles();
+  }
+
+  let last = 0, raf = null;
+  function loop(now) {
+    const t = now / 1000;
+    last = t;
+    px += (tx - px) * 0.06;
+    py += (ty - py) * 0.06;
+    draw(t, false);
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('pointermove', e => {
+    const r = canvas.getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  }, { passive: true });
+
+  let rt = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { resize(); }, 120);
+  });
+
+  resize();
+  if (!reduce) raf = requestAnimationFrame(loop);
+
+  if ('IntersectionObserver' in window && !reduce) {
+    new IntersectionObserver(entries => {
+      for (const en of entries) {
+        if (en.isIntersecting) {
+          if (!raf) raf = requestAnimationFrame(loop);
+        } else {
+          if (raf) { cancelAnimationFrame(raf); raf = null; }
+        }
+      }
+    }, { threshold: 0.02 }).observe(canvas);
+  }
+})();
+</script>
+</body>
+</html>
