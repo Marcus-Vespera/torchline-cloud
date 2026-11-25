@@ -587,6 +587,8 @@ table.cmp tr:last-child td, table.cmp tr:last-child th{ border-bottom:0; }
 .dco-4{ right:-4px; bottom:10px; transform:rotate(-8deg); opacity:.16; }
 @media (max-width:1100px){ .dco{ display:none; } }
 
+.agmk{ display:block; filter:drop-shadow(0 0 10px rgba(255,110,60,.45)); }
+
 /* sparks ----------------------------------------------------------- */
 .sparks{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .spark{
@@ -826,13 +828,10 @@ body{ overflow-x:clip; }
       <span class="brand-name">Torchline <span>Cloud</span></span>
     </a>
     <nav class="navlinks" aria-label="Sections">
-      <a href="#stack">Stack</a>
-      <a href="#build">Build</a>
-      <a href="#torchflow">Torchflow</a>
-      <a href="#agent">Agent</a>
-      <a href="#catalog">Catalog</a>
+      <a href="#stack">Stack + Build</a>
+      <a href="#torchflow">Torchflow.ai</a>
+      <a href="#catalog">Integrations</a>
       <a href="#pricing">Pricing</a>
-          <a href="#compare">Compare</a>
       <a href="#partners">Partners</a>
     </nav>
     <a class="btn btn-primary" href="#pricing">Start deploying</a>
@@ -1239,9 +1238,7 @@ body{ overflow-x:clip; }
       <div class="prod">
         <div>
           <div class="prod-head">
-            <span style="width:60px; height:60px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(168,140,255,.3); color:var(--violet); background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 30px -10px var(--violet)">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg>
-            </span>
+            <span style="width:60px; height:60px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(168,140,255,.3); background:radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.1), rgba(255,255,255,.02)); box-shadow:0 0 30px -10px var(--violet)"><svg class="agmk" viewBox="0 0 60 74" fill="none" aria-hidden="true" style="width:46px;height:57px"><defs><linearGradient id="agf" x1="30" y1="2" x2="30" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2E4"/><stop offset=".26" stop-color="#FFB47C"/><stop offset=".6" stop-color="#FF5A3C"/><stop offset="1" stop-color="#FF3D7F"/></linearGradient><linearGradient id="agb" x1="30" y1="38" x2="30" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#B08CFF"/><stop offset="1" stop-color="#5FE8FF"/></linearGradient></defs><path d="M29 2c1.4 6.2 5.2 8.6 7.8 13 3 5.2 4.6 8.8 4.6 13.4 0 7.4-5.4 12.8-12 12.8S17.4 35.8 17.4 28.4c0-4.6 1.6-8.2 4.6-13.4C24.6 10.6 27.6 8.2 29 2Z" fill="url(#agf)"/><path d="M29.6 14.6c2.2 4 4.4 5.8 4.4 9 0 3.4-2.4 6-4.6 6s-4.6-2.6-4.6-6c0-3.2 2.4-5 4.8-9Z" fill="#fff8ef" opacity=".55"/><path d="M22.6 26.4 36 25.2l-.5 2.6-12.7 1.2z" fill="#170a30" opacity=".9"/><g stroke="url(#agb)" stroke-width="2.9" stroke-linecap="round"><path d="M26.2 39.8 24.6 50M33 39.8 34.6 50"/></g><g transform="rotate(-3.5 30 55)"><g stroke="url(#agb)" stroke-width="2.6" fill="none"><path d="M15.6 52.4c8.6-2.8 20.4-2.8 29 0 .9.3 1 1.4.2 1.9-.7.5-1.6.7-2.4.5-8-1.4-16.6-1.4-24.6 0-.8.2-1.7 0-2.4-.5-.8-.5-.7-1.6.2-1.9Z"/><path d="M15.4 56.2h29.4" stroke-width="1.2" opacity=".5"/></g><circle cx="21" cy="62" r="3.4" fill="none" stroke="url(#agb)" stroke-width="2.6"/><circle cx="39" cy="62" r="3.4" fill="none" stroke="url(#agb)" stroke-width="2.6"/></g></svg></span>
             <div>
               <div class="prod-name">Torchflow Agent</div>
               <div class="prod-kind">The operator · on your instance</div>
@@ -1537,7 +1534,7 @@ body{ overflow-x:clip; }
         <div class="app gated"><img src="assets/apps/directus.svg" alt=""><span class="nm">Directus</span><span class="tier">8 GB+</span></div>
         <div class="app gated"><span class="mk">Pz</span><span class="nm">Postiz</span><span class="tier">16 GB+</span></div>
         <div class="app gated"><img src="assets/apps/budibase.svg" alt=""><span class="nm">Budibase</span><span class="tier">16 GB+</span></div>
-        <div class="app"><span class="mk" style="background:none;padding:0;display:grid;place-items:center;color:var(--violet)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span><span class="nm">Torchflow Agent</span><span class="tier">AI</span></div>
+        <div class="app"><span class="mk" style="background:none;padding:0;display:grid;place-items:center"><svg class="agmk" viewBox="0 0 60 74" fill="none" aria-hidden="true" style="width:17px;height:21px"><defs><linearGradient id="agf" x1="30" y1="2" x2="30" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2E4"/><stop offset=".26" stop-color="#FFB47C"/><stop offset=".6" stop-color="#FF5A3C"/><stop offset="1" stop-color="#FF3D7F"/></linearGradient><linearGradient id="agb" x1="30" y1="38" x2="30" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#B08CFF"/><stop offset="1" stop-color="#5FE8FF"/></linearGradient></defs><path d="M29 2c1.4 6.2 5.2 8.6 7.8 13 3 5.2 4.6 8.8 4.6 13.4 0 7.4-5.4 12.8-12 12.8S17.4 35.8 17.4 28.4c0-4.6 1.6-8.2 4.6-13.4C24.6 10.6 27.6 8.2 29 2Z" fill="url(#agf)"/><path d="M29.6 14.6c2.2 4 4.4 5.8 4.4 9 0 3.4-2.4 6-4.6 6s-4.6-2.6-4.6-6c0-3.2 2.4-5 4.8-9Z" fill="#fff8ef" opacity=".55"/><path d="M22.6 26.4 36 25.2l-.5 2.6-12.7 1.2z" fill="#170a30" opacity=".9"/><g stroke="url(#agb)" stroke-width="2.9" stroke-linecap="round"><path d="M26.2 39.8 24.6 50M33 39.8 34.6 50"/></g><g transform="rotate(-3.5 30 55)"><g stroke="url(#agb)" stroke-width="2.6" fill="none"><path d="M15.6 52.4c8.6-2.8 20.4-2.8 29 0 .9.3 1 1.4.2 1.9-.7.5-1.6.7-2.4.5-8-1.4-16.6-1.4-24.6 0-.8.2-1.7 0-2.4-.5-.8-.5-.7-1.6.2-1.9Z"/><path d="M15.4 56.2h29.4" stroke-width="1.2" opacity=".5"/></g><circle cx="21" cy="62" r="3.4" fill="none" stroke="url(#agb)" stroke-width="2.6"/><circle cx="39" cy="62" r="3.4" fill="none" stroke="url(#agb)" stroke-width="2.6"/></g></svg></span><span class="nm">Torchflow Agent</span><span class="tier">AI</span></div>
         <div class="app"><span class="mk">+</span><span class="nm">Your repo</span><span class="tier">migration</span></div>
       </div>
     </div>
