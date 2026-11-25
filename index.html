@@ -366,6 +366,96 @@ section + section::after{
   .zcard .gnum{ font-size:3rem; }
 }
 
+
+/* problem + stack + compare ----------------------------------------- */
+.probgrid{ display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:34px; }
+.prob{ display:flex; flex-direction:column; position:relative; padding:26px 28px; border:1px solid var(--hairline); border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.01)); }
+.prob.wide{ grid-column:1 / -1; }
+.pn{ display:block; font-family:var(--mono); font-size:.64rem; letter-spacing:.2em; color:var(--ember-3); text-transform:uppercase; }
+.prob h3{ margin-top:12px; font-size:1.18rem; line-height:1.3; }
+.prob p{ margin-top:12px; color:var(--muted); font-size:.92rem; line-height:1.66; }
+.prob p + p{ margin-top:10px; }
+.prob ul{ margin:16px 0 0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:8px 18px; }
+.prob ul li{ position:relative; padding-left:18px; font-size:.845rem; color:var(--muted-2); line-height:1.5; }
+.prob ul li::before{ content:"✕"; position:absolute; left:0; top:-1px; color:#ff6b5a; font-size:.72rem; opacity:.85; }
+.prob ul.sm li{ font-size:.8rem; }
+.prob ul.ok li::before{ content:"✓"; color:var(--ok); font-size:.78rem; }
+.stat{ display:flex; align-items:baseline; gap:10px; margin-top:auto; padding:12px 0; border-top:1px solid rgba(168,140,255,.14); margin-top:14px; }
+.stat b{ font-family:var(--display); font-size:1.55rem; color:var(--ink); }
+.stat span{ font-size:.78rem; color:var(--muted); line-height:1.4; }
+.cite{ display:block; font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; color:rgba(145,141,186,.75); margin-top:8px; }
+
+/* stack: one big card + rows (not a 6-up grid) */
+.stack{ display:grid; grid-template-columns:1.02fr .98fr; gap:24px; margin-top:34px; }
+.stackmain{ display:flex; flex-direction:column; position:relative; overflow:hidden; padding:30px 30px 26px; border:1px solid var(--hairline-2);
+  border-radius:var(--r-lg); background:
+    radial-gradient(520px 300px at 90% 0%, rgba(255,90,60,.11), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.012)); }
+.stackmain h3{ margin-top:14px; font-size:1.34rem; }
+.stackmain p{ margin-top:12px; color:var(--muted); font-size:.92rem; line-height:1.66; }
+.stackmain .specs{ margin-top:auto; padding-top:22px; display:grid; gap:9px; }
+.stackmain .specs div{ display:flex; justify-content:space-between; gap:16px; font-size:.82rem;
+  border-top:1px solid rgba(168,140,255,.13); padding-top:9px; }
+.stackmain .specs span{ color:var(--muted); }
+.stackmain .specs b{ color:var(--ink); font-weight:500; font-family:var(--mono); font-size:.74rem; letter-spacing:.04em; }
+.slist{ display:flex; flex-direction:column; justify-content:space-between; gap:0; }
+.srow{ display:grid; grid-template-columns:38px 1fr auto; gap:14px; align-items:start; padding:15px 2px;
+  border-top:1px solid rgba(168,140,255,.16); transition:background .2s; }
+.srow:last-child{ border-bottom:1px solid rgba(168,140,255,.16); }
+.srow:hover{ background:rgba(255,255,255,.022); }
+.srow .n{ font-family:var(--mono); font-size:.68rem; color:var(--ember-3); letter-spacing:.06em; padding-top:2px; }
+.srow h4{ font-size:.98rem; font-weight:600; }
+.srow p{ margin-top:5px; font-size:.84rem; color:var(--muted); line-height:1.55; }
+.srow .tag2{ font-family:var(--mono); font-size:.56rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ok); border:1px solid rgba(76,230,164,.3); border-radius:999px; padding:4px 8px; white-space:nowrap; }
+
+/* receipt */
+.receipt{ margin-top:24px; border:1px solid var(--hairline); border-radius:var(--r-lg); overflow:hidden;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.008)); }
+.receipt .rhead{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 24px;
+  border-bottom:1px solid rgba(168,140,255,.16); }
+.receipt .rhead h4{ font-size:.95rem; }
+.receipt .rhead span{ font-family:var(--mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2); }
+.rrow{ display:grid; grid-template-columns:1fr auto auto; gap:18px; padding:11px 24px; font-size:.86rem;
+  border-bottom:1px solid rgba(168,140,255,.09); }
+.rrow span:first-child{ color:var(--muted-2); }
+.rrow .a{ font-family:var(--mono); font-size:.78rem; color:var(--muted); }
+.rrow .b{ font-family:var(--mono); font-size:.78rem; color:var(--ink); }
+.rtot{ display:grid; grid-template-columns:1fr auto auto; gap:18px; padding:16px 24px; align-items:baseline; }
+.rtot span:first-child{ font-weight:600; }
+.rtot .a{ font-family:var(--mono); font-size:.9rem; color:#ff8f7a; text-decoration:line-through; opacity:.8; }
+.rtot .b{ font-family:var(--mono); font-size:1.1rem; color:var(--ok); }
+
+/* compare table */
+.tblwrap{ margin-top:30px; border:1px solid var(--hairline); border-radius:var(--r-lg); overflow:auto; }
+table.cmp{ width:100%; border-collapse:collapse; min-width:820px; font-size:.85rem; }
+table.cmp th, table.cmp td{ padding:13px 16px; text-align:left; border-bottom:1px solid rgba(168,140,255,.11); vertical-align:top; }
+table.cmp thead th{ position:sticky; top:0; background:#0c0a2c; font-family:var(--mono); font-size:.62rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500; z-index:2; }
+table.cmp thead th.ours{ color:var(--ember-3); }
+table.cmp tbody th{ font-weight:500; color:var(--ink); background:rgba(255,255,255,.018); width:250px;
+  border-right:1px solid rgba(168,140,255,.13); }
+table.cmp td{ color:var(--muted); }
+table.cmp td.ours{ color:#f2eeff; background:rgba(255,90,60,.075); border-left:1px solid rgba(255,90,60,.42);
+  border-right:1px solid rgba(255,90,60,.42); font-weight:500; }
+table.cmp thead th.ours{ background:linear-gradient(180deg, rgba(255,90,60,.16), #0c0a2c);
+  border-bottom:1px solid rgba(255,90,60,.45); }
+table.cmp tr:last-child td, table.cmp tr:last-child th{ border-bottom:0; }
+.yes{ color:var(--ok); }
+.no{ color:#ff7a6b; }
+.na{ color:rgba(145,141,186,.6); font-style:italic; }
+.tblnote{ margin-top:14px; font-size:.74rem; color:rgba(145,141,186,.8); line-height:1.6; }
+@media (max-width:900px){
+  .probgrid{ grid-template-columns:1fr; }
+  .prob ul{ grid-template-columns:1fr; }
+  .stack{ grid-template-columns:1fr; }
+  .srow{ grid-template-columns:30px 1fr; }
+  .srow .tag2{ grid-column:2; justify-self:start; margin-top:4px; }
+  .rrow, .rtot{ grid-template-columns:1fr auto; gap:10px; }
+  .rrow .b, .rtot .b{ grid-column:2; }
+}
+
 /* included grid ---------------------------------------------------- */
 .incgrid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 @media (max-width:980px){ .incgrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
@@ -473,7 +563,7 @@ section + section::after{
 @media (max-width:1100px){ .dco{ display:none; } }
 
 /* sparks ----------------------------------------------------------- */
-.sparks{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.sparks{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
 .spark{
   position:absolute; width:3px; height:3px; border-radius:50%; opacity:0;
   background:radial-gradient(circle, #fff2e2 0%, #ffb27a 38%, var(--ember-2) 62%, rgba(255,90,60,0) 78%);
@@ -683,7 +773,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 
 /* final containment guard — wins on source order */
 section{ overflow:hidden; }
-main{ overflow:hidden; }
+main{ position:relative; z-index:2; overflow:hidden; }
 body{ overflow-x:clip; }
 </style>
 </head>
@@ -711,12 +801,13 @@ body{ overflow-x:clip; }
       <span class="brand-name">Torchline <span>Cloud</span></span>
     </a>
     <nav class="navlinks" aria-label="Sections">
-      <a href="#bundle">Bundle</a>
+      <a href="#stack">Stack</a>
       <a href="#build">Build</a>
       <a href="#torchflow">Torchflow</a>
       <a href="#agent">Agent</a>
       <a href="#catalog">Catalog</a>
       <a href="#pricing">Pricing</a>
+          <a href="#compare">Compare</a>
       <a href="#partners">Partners</a>
     </nav>
     <a class="btn btn-primary" href="#pricing">Start deploying</a>
@@ -774,78 +865,143 @@ body{ overflow-x:clip; }
       <path d="M38 74c-10 0-18-7.6-18-17S28 40 38 40c2.4-11 12-19 23.6-19 10.4 0 19.3 6.6 22.6 16 2-.8 4.2-1.2 6.4-1.2C101 35.8 110 44.6 110 55.4c0 1.6-.2 3.2-.6 4.7 4.4 2.6 7.4 7.4 7.4 12.9H38Z"/>
     </svg>
   </span>
-  <section id="bundle" style="padding-top:clamp(34px,4vw,58px)">
+  <section id="problem">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">The problem</span>
+          <h2 style="margin-top:14px">Building the app was never<br>the hard part.</h2>
+        </div>
+        <p>Between the interviews, the threads and what our own agents drag back every morning, the same
+          failure repeats. It isn't the code. It's everything after the code.</p>
+      </div>
+
+      <div class="probgrid">
+        <div class="prob">
+          <span class="pn">Problem 01 — the deploy</span>
+          <h3>Apps stall at MVP because shipping costs more than building.</h3>
+          <p>Deployment is priced like a mystery and taught like a secret. Five minutes or five hours, and you
+            don't find out which until it's done — a Node version, a build config, a DNS record, an npm
+            dependency that was fine yesterday.</p>
+          <p>Then it goes live, and it's live for everyone. The scanners find a new host in hours, and the
+            traffic that arrives first is rarely the traffic you wanted.</p>
+          <div class="stat"><b>45%</b><span>of AI-generated code fails security tests, introducing OWASP Top 10
+            vulnerabilities across 100+ models</span></div>
+          <div class="cite">VERACODE · 2025 GENAI CODE SECURITY REPORT</div>
+        </div>
+
+        <div class="prob">
+          <span class="pn">Problem 02 — the exposure</span>
+          <h3>Deploying is no longer safe by default.</h3>
+          <p>A static site on a weak domain isn't a finished project — it's the first inch of one, and it's the
+            inch attackers start at. Open terminals, keys in a repo, a database with no row-level security, an
+            MCP with more reach than it needs, a cloud someone abandoned in March.</p>
+          <ul class="sm">
+            <li>Remote logins, open terminals</li>
+            <li>API keys and secrets in git</li>
+            <li>Databases with no RLS</li>
+            <li>npm and dependency compromise</li>
+            <li>Unpatched images, old Node</li>
+            <li>Bot scans, credential stuffing</li>
+            <li>Leaked .env, permissive CORS</li>
+            <li>Orphaned projects on forgotten hosts</li>
+          </ul>
+          <div class="stat"><b>$4.44M</b><span>average cost of a breach — $10.22M in the US</span></div>
+          <div class="cite">IBM · COST OF A DATA BREACH 2025</div>
+        </div>
+
+        <div class="prob wide">
+          <span class="pn">Problem 03 — the cliff</span>
+          <h3>Nobody told solo developers they'd have to become network engineers.</h3>
+          <p>Learning cloud infrastructure used to be optional. Now the list is long and it never ends: DNS
+            records, reverse proxies, YAML, Docker, firewalls, bot management, TLS renewal, backups you've
+            actually tested, row-level security, when Vercel is right and when you need a real box, and which
+            of the four clouds won't bill you for a mistake.</p>
+          <p>That's the gap we close. Not with a wiki — with a finished instance and someone accountable for
+            it. You build; we run the network, the deploys and the security. Stay and learn it properly if you
+            want to, or never think about it again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
     <div class="wrap">
       <div class="sechead">
         <div>
           <span class="eyebrow">The bundle</span>
           <h2 style="margin-top:14px">One instance.<br>The whole stack.</h2>
         </div>
-        <p>You're not renting a server and a login. Every Torchline Cloud instance ships with the six things
-          that turn a deployed app into a business system — and you don't pay extra for any of them.</p>
+        <p>You're not renting a server and a login. Every instance ships with the six things that turn a
+          deployed app into a business system — and none of them are an upsell.</p>
       </div>
 
-      <div class="bundle">
-        <div class="bcard" style="--em:var(--cyan)">
-          <span class="idx">01</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M7.6 17.6h8.8a3.6 3.6 0 0 0 .4-7.2 5.1 5.1 0 0 0-9.7-1.2 3.9 3.9 0 0 0 .5 8.4Z"/><circle cx="12" cy="13.4" r="1.7"/><path d="M12 12v-2"/></svg></span>
+      <div class="stack">
+        <div class="stackmain">
+          <span class="pn">01 · host</span>
           <h3>Torchline Cloud</h3>
-          <span class="tag">host · your instance</span>
           <p>Your own isolated box with a real domain, TLS, a database and a desktop UI instead of a terminal.
-            Sized by RAM, not by permission slips.</p>
-          <span class="incl">included</span>
+            Sized by RAM, not by permission slips — no per-seat maths, no app slots to negotiate.</p>
+          <div class="specs">
+            <div><span>Isolation</span><b>own container, own uid</b></div>
+            <div><span>Access</span><b>desktop UI, terminal closed</b></div>
+            <div><span>Sizing</span><b>1 – 8 GB RAM</b></div>
+            <div><span>Regions</span><b>EU · US</b></div>
+            <div><span>Root shell</span><b>on request</b></div>
+          </div>
         </div>
 
-        <div class="bcard" style="--em:var(--ember)">
-          <span class="idx">02</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="2.2"/><circle cx="12" cy="6.6" r="2.2"/><circle cx="18.5" cy="14.6" r="2.2"/><path d="M7.2 15.4 10.4 8.5M13.6 8.2l3.4 4.6M8 17.4h8"/></svg></span>
-          <h3>Torchflow</h3>
-          <span class="tag">build · no code</span>
-          <p>Describe the app you need in plain English, or start from a template. Torchflow assembles it —
-            dashboards, forms, Telegram bots, internal tools — and deploys straight to your instance.</p>
-          <span class="incl">included · <a href="#torchflow" style="color:var(--cyan)">details ↓</a></span>
-        </div>
-
-        <div class="bcard" style="--em:var(--violet)">
-          <span class="idx">03</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span>
-          <h3>Torchflow Agent</h3>
-          <span class="tag">operate · on your instance</span>
-          <p>An autonomous agent that watches the instance, answers on your own AI credit, drafts the replies and
-            files the tickets — pointed at your data, not ours.</p>
-          <span class="incl">included · <a href="#agent" style="color:var(--cyan)">details ↓</a></span>
-        </div>
-
-        <div class="bcard" style="--em:var(--cyan)">
-          <span class="idx">04</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.2"/><path d="M3.8 12h16.4M12 3.8c2.9 3.2 2.9 13.2 0 16.4M12 3.8c-2.9 3.2-2.9 13.2 0 16.4"/></svg></span>
-          <h3>DNS &amp; Cloudflare</h3>
-          <span class="tag">connect · your domain</span>
-          <p>Keep your own Cloudflare account and point a CNAME at us, or let us hold the zone. Certificates
-            are issued and renewed for you — no DNS homework, no downtime.</p>
-          <span class="incl">included</span>
-        </div>
-
-        <div class="bcard" style="--em:var(--magenta)">
-          <span class="idx">05</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2 19 6v5.7c0 4.2-2.9 7.6-7 9.1-4.1-1.5-7-4.9-7-9.1V6Z"/><circle cx="12" cy="11" r="1.8"/><path d="M12 12.8v2.4"/></svg></span>
-          <h3>Vaultwarden</h3>
-          <span class="tag">protect · password vault</span>
-          <p>A team password manager running on your own instance — not a $5/seat SaaS, not shared spreadsheets.
-            Every size, at no extra cost.</p>
-          <span class="incl">included</span>
-        </div>
-
-        <div class="bcard" style="--em:var(--cyan)">
-          <span class="idx">06</span>
-          <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 13.2h3.6l2.4-6 3.8 12 2.6-6h6"/></svg></span>
-          <h3>Monitoring &amp; VPS</h3>
-          <span class="tag">watch · 24/7</span>
-          <p>Memory, disk, uptime and app health on a real VPS, watched by us and by your agent. Nightly
-            encrypted backups included, restores tested.</p>
-          <span class="incl">included</span>
+        <div class="slist">
+          <div class="srow">
+            <span class="n">02</span>
+            <div><h4>Torchflow</h4><p>Describe the app in plain English, or start from a template.
+              Dashboards, forms, Telegram bots, internal tools — built and deployed to the same instance.</p></div>
+            <span class="tag2">included</span>
+          </div>
+          <div class="srow">
+            <span class="n">03</span>
+            <div><h4>Torchflow Agent</h4><p>An autonomous agent that watches the instance, answers on your own
+              AI credit, drafts the replies and files the ticket — pointed at your data, not ours.</p></div>
+            <span class="tag2">included</span>
+          </div>
+          <div class="srow">
+            <span class="n">04</span>
+            <div><h4>DNS &amp; Cloudflare</h4><p>Keep your own Cloudflare account and point a CNAME at us, or
+              let us hold the zone. Certificates issued and renewed — no DNS homework, no downtime.</p></div>
+            <span class="tag2">included</span>
+          </div>
+          <div class="srow">
+            <span class="n">05</span>
+            <div><h4>Vaultwarden</h4><p>A team password manager on your own instance — not a $5/seat SaaS, not
+              a shared spreadsheet. Every size, no extra line.</p></div>
+            <span class="tag2">included</span>
+          </div>
+          <div class="srow">
+            <span class="n">06</span>
+            <div><h4>Monitoring &amp; backups</h4><p>Memory, disk, uptime and app health on a real VPS —
+              watched by us and by your agent. Nightly encrypted backups, restores tested.</p></div>
+            <span class="tag2">included</span>
+          </div>
         </div>
       </div>
+
+      <div class="receipt">
+        <div class="rhead">
+          <h4>If you assembled this yourself</h4>
+          <span>typical monthly · list prices</span>
+        </div>
+        <div class="rrow"><span>VPS with a real IP</span><span class="a">$9 – 30</span><span class="b">$9 – 30</span></div>
+        <div class="rrow"><span>Managed Postgres</span><span class="a">$15 – 25</span><span class="b">$15 – 25</span></div>
+        <div class="rrow"><span>Password manager, 5 seats</span><span class="a">$20 – 25</span><span class="b">$20 – 25</span></div>
+        <div class="rrow"><span>DNS, TLS and CDN</span><span class="a">$0 – 20</span><span class="b">$0 – 20</span></div>
+        <div class="rrow"><span>Uptime and resource monitoring</span><span class="a">$7 – 15</span><span class="b">$7 – 15</span></div>
+        <div class="rrow"><span>Offsite backups</span><span class="a">$5 – 10</span><span class="b">$5 – 10</span></div>
+        <div class="rrow"><span>No-code builder</span><span class="a">$25 – 100</span><span class="b">$25 – 100</span></div>
+        <div class="rrow"><span>Agent and AI credit</span><span class="a">$20 – 100</span><span class="b">$20 – 100</span></div>
+        <div class="rtot"><span>Assembled yourself</span><span class="a">$101 – 325</span><span class="b">$49 – 249</span></div>
+      </div>
+      <p class="tblnote">Ranges are the cheapest workable tier and the tier a small team usually lands on.
+        Torchline is capacity-priced — every line above is in every plan.</p>
     </div>
   </section>
 
@@ -1360,6 +1516,66 @@ body{ overflow-x:clip; }
   </section>
 
   <!-- DOMAINS -->
+  <section id="compare">
+    <div class="wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">Side by side</span>
+          <h2 style="margin-top:14px">What you get, and<br>what you're left with.</h2>
+        </div>
+        <p>The builders are good at building. The bill is where it gets quiet — credits on top of
+          subscription, hosting you don't own, and an agent that stops at deployment.</p>
+      </div>
+
+      <div class="tblwrap">
+        <table class="cmp">
+          <thead>
+            <tr><th style="width:250px"> </th><th class="ours">Torchline Cloud</th><th>Lovable</th><th>Replit</th><th>Base44</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>Monthly, entry tier</th><td class="ours">$49</td><td>$25 Pro</td><td>$20 Core</td><td>$16 Starter</td></tr>
+            <tr><th>What that tier buys</th><td class="ours">1 GB instance, all six inclusions</td><td>100 credits, lovable.app hosting</td><td>$20 of model credit, hosting</td><td>100 message + 2,000 integration credits</td></tr>
+            <tr><th>The server is yours</th><td class="ours"><span class="yes">Yes</span></td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+            <tr><th>Database</th><td class="ours">PostgreSQL, provisioned and yours</td><td>Supabase-backed</td><td>Postgres included</td><td>Built-in backend</td></tr>
+            <tr><th>Custom domain</th><td class="ours">every plan</td><td>Pro and up</td><td>paid plans</td><td>Starter and up</td></tr>
+            <tr><th>DNS you control</th><td class="ours"><span class="yes">Yes</span></td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+            <tr><th>Password vault included</th><td class="ours"><span class="yes">Yes</span></td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+            <tr><th>Backups with a restore you can run</th><td class="ours"><span class="yes">Yes</span></td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+            <tr><th>Agent that runs the app</th><td class="ours">Torchflow Agent, included</td><td>build-time only</td><td>build-time only</td><td>build-time only</td></tr>
+            <tr><th>AI cost, stated up front</th><td class="ours">35% flat on credit, BYOK at cost</td><td>credit value varies by plan</td><td>credits, effort-based pricing</td><td>message credits, model-dependent</td></tr>
+            <tr><th>Model choice</th><td class="ours">any via OpenRouter, or your own key</td><td>fixed</td><td>fixed + Free Mode</td><td>selectable</td></tr>
+            <tr><th>Telegram bot from the builder</th><td class="ours"><span class="yes">Yes</span></td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+            <tr><th>Support</th><td class="ours">founder and engineer, direct</td><td>email, priority on Business</td><td>premium on Pro</td><td>premium on Elite</td></tr>
+            <tr><th>White-label or reseller</th><td class="ours">30% partner, 40% white-label</td><td>no</td><td>no</td><td>no</td></tr>
+            <tr><th>Security help, account recovery, investigation</th><td class="ours">yes, as a service</td><td>no</td><td>no</td><td>no</td></tr>
+            <tr><th>Cost to a finished MVP</th><td class="ours">published: capacity + AI at 35%</td><td>not published</td><td>not published</td><td>not published</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tblnote">Competitor values are what each vendor sells on its own pricing page (checked
+        November 2026) at the entry paid tier — not what's technically possible with add-ons. Where a vendor
+        doesn't publish something, the table says nothing rather than guessing. Their credits and ours are not
+        the same unit, which is exactly the problem.</p>
+
+      <div class="probgrid" style="margin-top:26px">
+        <div class="prob wide" style="border-color:rgba(255,90,60,.26)">
+          <span class="pn">When it goes wrong anyway</span>
+          <h3>We don't stop at the server. We answer the incident.</h3>
+          <p>Hosting is where this starts, not where it ends. If an account gets taken, a page gets stolen, a
+            repo leaks or a client wants a written account of what happened, that work exists as a service —
+            the same people who run your box.</p>
+          <ul class="ok">
+            <li>Account and page recovery, worked case by case</li>
+            <li>Incident investigation and evidence write-up</li>
+            <li>Credential rotation and hardening after a breach</li>
+            <li>Plain-English reports for insurers and lawyers</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <section id="domains">
     <div class="wrap">
       <div class="dom">
@@ -1534,12 +1750,13 @@ body{ overflow-x:clip; }
       </div>
       <div class="fcol">
         <b>Platform</b>
-        <a href="#bundle">The bundle</a>
+        <a href="#stack">The stack</a>
         <a href="#build">Build without code</a>
         <a href="#torchflow">Torchflow</a>
         <a href="#agent">Torchflow Agent</a>
         <a href="#catalog">Catalog</a>
         <a href="#pricing">Pricing</a>
+          <a href="#compare">Compare</a>
       </div>
       <div class="fcol">
         <b>Company</b>
