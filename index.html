@@ -35,6 +35,11 @@
   --violet:      #9a6cff;
   --magenta:     #ff53d6;
   --ok:          #4ce6a4;
+  --ember-2:     #ff5a3c;
+  --ember-3:     #ff9a5c;
+  --pink:        #ff4d8d;
+  --rail:        rgba(196,178,255,.16);
+  --rail-2:      rgba(196,178,255,.30);
   --ok-glow:     rgba(76,230,164,.28);
   --grid:        rgba(214,222,255,.085);
   --grid-bright: rgba(230,236,255,.16);
@@ -70,6 +75,7 @@ html{ scroll-behavior:smooth; }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
 body{
+  position:relative;
   margin:0;
   background:var(--void);
   color:var(--ink);
@@ -87,6 +93,8 @@ body{
     radial-gradient(900px 620px at 78% -6%, rgba(255,83,214,.16), transparent 62%),
     radial-gradient(1000px 700px at 12% 4%, rgba(154,108,255,.20), transparent 60%),
     radial-gradient(1200px 900px at 50% 108%, rgba(89,230,255,.10), transparent 64%),
+    radial-gradient(760px 520px at 6% 78%, rgba(255,90,60,.13), transparent 62%),
+    radial-gradient(620px 420px at 92% 46%, rgba(255,77,141,.09), transparent 64%),
     linear-gradient(180deg, var(--deep) 0%, var(--void) 34%, var(--plum) 78%, #0b0626 100%);
 }
 .gridtex{
@@ -138,10 +146,11 @@ p{ margin:0; }
 .lede{ font-size:clamp(1.05rem,1.35vw,1.32rem); color:var(--ink-2); line-height:1.62; }
 .eyebrow{
   font-family:var(--mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--cyan); display:inline-flex; align-items:center; gap:10px;
+  color:var(--ember-3); display:inline-flex; align-items:center; gap:10px;
 }
 .eyebrow::before{
-  content:""; width:22px; height:1px; background:linear-gradient(90deg,var(--cyan),transparent);
+  content:""; width:22px; height:1px; background:linear-gradient(90deg,var(--ember-2),var(--pink) 60%,transparent);
+  box-shadow:0 0 10px rgba(255,90,60,.5);
 }
 .mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
 .dim{ color:var(--muted); }
@@ -216,7 +225,7 @@ header{
   font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
 }
 .trust span{ display:inline-flex; align-items:center; gap:7px; }
-.trust i{ width:5px; height:5px; border-radius:50%; background:var(--cyan); box-shadow:var(--glow-cyan); }
+.trust i{ width:5px; height:5px; border-radius:50%; background:var(--ember-2); box-shadow:0 0 12px rgba(255,90,60,.7); }
 
 .scene-shell{ position:relative; aspect-ratio: 1 / .92; min-height:340px; }
 #scene{ position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -247,8 +256,28 @@ header{
 .tick svg{ width:9px; height:9px; }
 
 /* section furniture ---------------------------------------------- */
-section{ padding:clamp(48px,6.2vw,88px) 0; position:relative; }
-section + section{ border-top:1px solid rgba(168,140,255,.075); }
+section{ padding:clamp(48px,6.2vw,88px) 0; position:relative; overflow:hidden; }
+/* containment: vertical rails at the container edge, ember rule on top */
+section::before{
+  content:""; position:absolute; top:0; bottom:0; pointer-events:none;
+  left:max(calc((100% - 1324px) / 2), 14px);
+  right:max(calc((100% - 1324px) / 2), 14px);
+  border-left:1px solid var(--rail);
+  border-right:1px solid var(--rail);
+}
+section + section{ border-top:0; }
+section + section::after{
+  content:""; position:absolute; top:0; height:1px; pointer-events:none;
+  left:max(calc((100% - 1324px) / 2), 14px);
+  right:max(calc((100% - 1324px) / 2), 14px);
+  background:linear-gradient(90deg,
+    var(--ember-2) 0%, rgba(255,90,60,.25) 8%,
+    rgba(168,140,255,.22) 34%, rgba(168,140,255,.22) 66%,
+    rgba(89,230,255,.25) 92%, var(--cyan) 100%);
+  opacity:.55;
+}
+.hero{ padding-bottom:0; }
+.hero + section::after{ opacity:.7; }
 .sechead{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.86fr); gap:var(--s-5); align-items:end; margin-bottom:var(--s-6); }
 @media (max-width:880px){ .sechead{ grid-template-columns:1fr; gap:14px; } }
 .sechead p{ color:var(--muted); max-width:38ch; }
@@ -402,11 +431,35 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .dco{ position:absolute; pointer-events:none; z-index:0; opacity:.20; mix-blend-mode:screen; }
 .dco svg{ display:block; overflow:visible; }
 .dco::after{ content:""; position:absolute; inset:-30%; background:radial-gradient(closest-side, rgba(154,108,255,.30), transparent 70%); filter:blur(22px); z-index:-1; }
-.dco-1{ left:-90px; top:90px; transform:rotate(-14deg); }
-.dco-2{ right:-70px; top:140px; transform:rotate(11deg); }
-.dco-3{ left:-60px; bottom:40px; transform:rotate(9deg); opacity:.14; }
-.dco-4{ right:-100px; bottom:10px; transform:rotate(-8deg); opacity:.16; }
+.dco-1{ left:-6px; top:90px; transform:rotate(-14deg); }
+.dco-2{ right:-6px; top:140px; transform:rotate(11deg); }
+.dco-3{ left:-4px; bottom:40px; transform:rotate(9deg); opacity:.14; }
+.dco-4{ right:-4px; bottom:10px; transform:rotate(-8deg); opacity:.16; }
 @media (max-width:1100px){ .dco{ display:none; } }
+
+/* sparks ----------------------------------------------------------- */
+.sparks{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.spark{
+  position:absolute; width:3px; height:3px; border-radius:50%; opacity:0;
+  background:radial-gradient(circle, #ffe6cf 0%, var(--ember-2) 55%, rgba(255,90,60,0) 72%);
+  animation:rise linear infinite;
+}
+@keyframes rise{
+  0%   { transform:translate3d(0,0,0) scale(.5); opacity:0 }
+  8%   { opacity:.95 }
+  60%  { opacity:.55 }
+  100% { transform:translate3d(14px,-160px,0) scale(1.15); opacity:0 }
+}
+.streak{
+  position:absolute; height:2px; width:240px; border-radius:2px; opacity:.0;
+  background:linear-gradient(90deg, transparent, var(--ember-2), var(--pink), transparent);
+  filter:blur(2px); animation:drift 14s ease-in-out infinite;
+}
+@keyframes drift{
+  0%,100% { opacity:0; transform:translateX(-30px) rotate(-16deg) }
+  35%     { opacity:.32 }
+  65%     { opacity:.18 }
+}
 
 /* chat widget ------------------------------------------------------ */
 .chat-fab{
@@ -502,7 +555,7 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
   background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
   position:relative;
 }
-.plan.rec{ border-color:rgba(89,230,255,.5); background:linear-gradient(180deg, rgba(89,230,255,.10), rgba(154,108,255,.05)); box-shadow:var(--shadow-lift), 0 0 0 1px rgba(89,230,255,.12) inset; }
+.plan.rec{ border-color:rgba(255,122,60,.5); background:linear-gradient(180deg, rgba(89,230,255,.10), rgba(154,108,255,.05)); box-shadow:var(--shadow-lift), 0 0 0 1px rgba(89,230,255,.12) inset; }
 .plan .ram{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
 .plan .price{ font-family:var(--display); font-size:2.5rem; line-height:1; letter-spacing:-.03em; margin:12px 0 2px; }
 .plan .price sup{ font-size:.9rem; vertical-align:super; letter-spacing:0; color:var(--muted); margin-right:2px; }
@@ -513,7 +566,7 @@ section + section{ border-top:1px solid rgba(168,140,255,.075); }
 .plan .badge{
   position:absolute; top:-11px; left:22px; font-family:var(--mono); font-size:.6rem; letter-spacing:.14em;
   text-transform:uppercase; padding:4px 10px; border-radius:999px;
-  background:linear-gradient(90deg,var(--cyan),var(--violet)); color:#0a0620; font-weight:600;
+  background:linear-gradient(90deg,var(--ember-2),var(--pink)); color:#180713; font-weight:600;
 }
 .addons{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:0; margin-top:26px; border-top:1px solid var(--hairline); }
 .addon{ padding:16px 0 0; padding-right:20px; }
@@ -598,12 +651,18 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 @media (prefers-reduced-motion: reduce){
   *{ animation:none !important; transition:none !important; }
 }
+
+/* final containment guard — wins on source order */
+section{ overflow:hidden; }
+main{ overflow:hidden; }
+body{ overflow-x:clip; }
 </style>
 </head>
 <body>
 <div class="field"></div>
 <div class="gridtex"></div>
 <div class="sparkle"></div>
+<div class="sparks" id="sparks" aria-hidden="true"></div>
 <div class="grain"></div>
 
 <header>
@@ -626,7 +685,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       <a href="#bundle">Bundle</a>
       <a href="#build">Build</a>
       <a href="#torchflow">Torchflow</a>
-      <a href="#hermes">Agents</a>
+      <a href="#agent">Agent</a>
       <a href="#catalog">Catalog</a>
       <a href="#pricing">Pricing</a>
       <a href="#partners">Partners</a>
@@ -647,7 +706,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           the updates and the backups for once.</p>
         <ul class="hero-list">
           <li><div><b>Torchflow.AI</b><span>App builder</span></div></li>
-          <li><div><b>Hermes</b><span>Autonomous AI agent</span></div></li>
+          <li><div><b>Torchflow Agent</b><span>Autonomous AI agent</span></div></li>
           <li><div><b>Coolify + Docker</b><span>Deployment</span></div></li>
           <li><div><b>Numerous apps &amp; tools</b><span>Custom catalog</span></div></li>
         </ul>
@@ -721,11 +780,11 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
         <div class="bcard" style="--em:var(--violet)">
           <span class="idx">03</span>
           <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span>
-          <h3>Hermes agents</h3>
+          <h3>Torchflow Agent</h3>
           <span class="tag">operate · on your instance</span>
-          <p>An agent team that watches the instance, answers on your own AI credit, drafts the replies, files
-            the tickets — and can be pointed at your data instead of ours.</p>
-          <span class="incl">included · <a href="#hermes" style="color:var(--cyan)">details ↓</a></span>
+          <p>An autonomous agent that watches the instance, answers on your own AI credit, drafts the replies and
+            files the tickets — pointed at your data, not ours.</p>
+          <span class="incl">included · <a href="#agent" style="color:var(--cyan)">details ↓</a></span>
         </div>
 
         <div class="bcard" style="--em:var(--cyan)">
@@ -753,7 +812,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <span class="em"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 13.2h3.6l2.4-6 3.8 12 2.6-6h6"/></svg></span>
           <h3>Monitoring &amp; VPS</h3>
           <span class="tag">watch · 24/7</span>
-          <p>Memory, disk, uptime and app health on a real VPS, watched by us and by the agents. Nightly
+          <p>Memory, disk, uptime and app health on a real VPS, watched by us and by your agent. Nightly
             encrypted backups included, restores tested.</p>
           <span class="incl">included</span>
         </div>
@@ -878,7 +937,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
   </section>
 
   <!-- HERMES DEEP -->
-  <section id="hermes">
+  <section id="agent">
     <span class="dco dco-3" aria-hidden="true">
       <svg width="120" height="150" viewBox="0 0 120 150" fill="none" stroke="url(#dg2)" stroke-width="1.6">
         <defs><linearGradient id="dg2" x1="0" y1="0" x2="120" y2="150"><stop stop-color="#FF8A4C"/><stop offset=".45" stop-color="#FF53D6"/><stop offset="1" stop-color="#9A6CFF"/></linearGradient></defs>
@@ -894,7 +953,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg>
             </span>
             <div>
-              <div class="prod-name">Hermes agents</div>
+              <div class="prod-name">Torchflow Agent</div>
               <div class="prod-kind">The operator · on your instance</div>
             </div>
           </div>
@@ -921,13 +980,16 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           </div>
 
           <p class="note" style="margin-top:22px">
-            <strong>Code, conversation and delegation at the same time.</strong> Because Torchflow and Hermes
-            share the instance, an agent can build the app, talk to your customer about it, and hand the next
-            step to another agent — in one run, without you opening a tab.
+            <strong>Code, conversation and delegation at the same time.</strong> Because Torchflow and the Agent
+            share the instance, it can build the app, talk to your customer about it, and hand the next step to
+            another agent — in one run, without you opening a tab.
           </p>
           <p class="note" style="margin-top:12px">This is the same agent stack we run our own companies on —
             mail triage, competitor watching, support, publishing, security intel. You're getting the working
             version, not a demo.</p>
+          <p class="note" style="margin-top:12px">Built on the open-source Hermes agent (MIT). We fork it, brand
+            it Torchflow, and run it on your box — so the agent improves when we ship, not when someone else
+            does.</p>
         </div>
 
         <div class="prod-side">
@@ -1008,7 +1070,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
           <div>
             <div class="tagline">Operate</div>
             <h3>We watch it, patch it, back it up and answer for it.</h3>
-            <p>Nightly encrypted backups, uptime and resource checks, dependency updates, and Hermes agents on
+            <p>Nightly encrypted backups, uptime and resource checks, dependency updates, and the Torchflow Agent on
               the instance doing the first pass. If the box degrades, we see it before your customers do.</p>
           </div>
         </div>
@@ -1059,7 +1121,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
         <div class="inc">
           <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.4 18 20 6.4"/></svg></span>
           <b>Uptime and resource monitoring</b>
-          <p>Memory, disk and app health, visible in your desktop and watched by us and by the agents.</p>
+          <p>Memory, disk and app health, visible in your desktop and watched by us and by your agent.</p>
           <span class="tagx">24/7</span>
         </div>
         <div class="inc">
@@ -1113,7 +1175,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
             <div>
               <img class="lg" src="assets/apps/uptimekuma.svg" alt="Uptime Kuma">
               <h4>Watched around the clock</h4>
-              <p>Uptime, memory, disk and app health — surfaced in your desktop and watched by the agents.</p>
+              <p>Uptime, memory, disk and app health — surfaced in your desktop and watched by your agent.</p>
             </div>
           </div>
           <div class="slide">
@@ -1175,7 +1237,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
         <div class="app gated"><img src="assets/apps/directus.svg" alt=""><span class="nm">Directus</span><span class="tier">8 GB+</span></div>
         <div class="app gated"><span class="mk">Pz</span><span class="nm">Postiz</span><span class="tier">16 GB+</span></div>
         <div class="app gated"><img src="assets/apps/budibase.svg" alt=""><span class="nm">Budibase</span><span class="tier">16 GB+</span></div>
-        <div class="app"><span class="mk" style="background:none;padding:0;display:grid;place-items:center;color:var(--violet)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span><span class="nm">Hermes</span><span class="tier">AI credit</span></div>
+        <div class="app"><span class="mk" style="background:none;padding:0;display:grid;place-items:center;color:var(--violet)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="8" width="14.8" height="10.4" rx="3.2"/><path d="M12 4.4V8"/><circle cx="9.4" cy="13" r="1.1"/><circle cx="14.6" cy="13" r="1.1"/><path d="M2.6 12.4v2M21.4 12.4v2"/></svg></span><span class="nm">Torchflow Agent</span><span class="tier">AI</span></div>
         <div class="app"><span class="mk">+</span><span class="nm">Your repo</span><span class="tier">migration</span></div>
       </div>
     </div>
@@ -1436,7 +1498,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
         <a href="#bundle">The bundle</a>
         <a href="#build">Build without code</a>
         <a href="#torchflow">Torchflow</a>
-        <a href="#hermes">Hermes agents</a>
+        <a href="#agent">Torchflow Agent</a>
         <a href="#catalog">Catalog</a>
         <a href="#pricing">Pricing</a>
       </div>
@@ -1885,7 +1947,7 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       included, which size. Pick a question and I'll answer it properly.</div>
   </div>
   <div class="chat-q" id="chatQ">
-    <button data-a="Every instance includes Torchflow, the Hermes agents, DNS and TLS, PostgreSQL, Vaultwarden, nightly encrypted backups and monitoring. None of that is an add-on — the only extra line items are disk beyond your tier ($0.25/GB), a dedicated IP ($49/mo), extra backup retention ($5 per 30 days) and AI credit if you'd rather not bring your own key.">What's included?</button>
+    <button data-a="Every instance includes Torchflow, the Torchflow Agent, DNS and TLS, PostgreSQL, Vaultwarden, nightly encrypted backups and monitoring. None of that is an add-on — the only extra line items are disk beyond your tier ($0.25/GB), a dedicated IP ($49/mo), extra backup retention ($5 per 30 days) and AI credit if you'd rather not bring your own key.">What's included?</button>
     <button data-a="40 GB on the $49 tier, 80 GB at $85, 160 GB at $140 and 320 GB at $249 — plus $0.25 per GB per month beyond that, billed only for what you actually use. Most sites never leave the included disk; media-heavy ones do.">How much disk?</button>
     <button data-a="4 GB is right for one to three light apps. 8 GB covers around six, including heavier ones like Chatwoot, Baserow or Medusa. 16 GB is where Postiz and Budibase unlock, or several heavy apps at once. You can upgrade in a click and everything moves with you.">Which size do I need?</button>
     <button data-a="Start small, upgrade later — it's month to month with no contract. If you'd rather try before committing, reply here and we'll set you up with a short trial on a real instance.">Can I try before paying?</button>
@@ -1896,6 +1958,34 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
 </div>
 
 <script>
+/* ember sparks */
+(function () {
+  const host = document.getElementById('sparks');
+  if (!host) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const n = window.innerWidth < 800 ? 10 : 22;
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement('span');
+    el.className = 'spark';
+    el.style.left = (Math.random() * 100).toFixed(2) + '%';
+    el.style.top = (55 + Math.random() * 45).toFixed(2) + '%';
+    el.style.animationDuration = (7 + Math.random() * 9).toFixed(1) + 's';
+    el.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
+    const sc = (0.6 + Math.random() * 1.1).toFixed(2);
+    el.style.width = el.style.height = (2.5 * sc).toFixed(1) + 'px';
+    host.appendChild(el);
+  }
+  const streaks = [[12, 32, 0], [78, 62, 5], [46, 88, 9]];
+  streaks.forEach(([x, y, d]) => {
+    const el = document.createElement('span');
+    el.className = 'streak';
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+    el.style.animationDelay = d + 's';
+    host.appendChild(el);
+  });
+})();
+
 /* support chat */
 (function () {
   const fab = document.getElementById('chatFab');
