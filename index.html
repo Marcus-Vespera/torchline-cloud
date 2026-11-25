@@ -41,8 +41,8 @@
   --rail:        rgba(196,178,255,.16);
   --rail-2:      rgba(196,178,255,.30);
   --ok-glow:     rgba(76,230,164,.28);
-  --grid:        rgba(214,222,255,.085);
-  --grid-bright: rgba(230,236,255,.16);
+  --grid:        rgba(214,222,255,.10);
+  --grid-bright: rgba(230,236,255,.19);
   --ember:       #ff8a4c;
   --cyan-dim:    rgba(89,230,255,.16);
   --violet-dim:  rgba(154,108,255,.16);
@@ -169,7 +169,6 @@ header{
 .brand-name span{ color:var(--muted); font-weight:400; }
 .navlinks{ display:flex; gap:var(--s-5); margin-left:auto; }
 .nav > .btn{ margin-left:auto; }
-.navlinks + .btn{ margin-left:0; }
 .navlinks a{
   color:var(--ink-2); text-decoration:none; font-size:.9rem; letter-spacing:.01em;
   padding:8px 2px; border-bottom:1px solid transparent; transition:color .18s, border-color .18s;
@@ -256,28 +255,20 @@ header{
 .tick svg{ width:9px; height:9px; }
 
 /* section furniture ---------------------------------------------- */
-section{ padding:clamp(48px,6.2vw,88px) 0; position:relative; overflow:hidden; }
-/* containment: vertical rails at the container edge, ember rule on top */
-section::before{
-  content:""; position:absolute; top:0; bottom:0; pointer-events:none;
-  left:max(calc((100% - 1324px) / 2), 14px);
-  right:max(calc((100% - 1324px) / 2), 14px);
-  border-left:1px solid var(--rail);
-  border-right:1px solid var(--rail);
-}
-section + section{ border-top:0; }
+section{ padding:clamp(44px,5.4vw,76px) 0; position:relative; overflow:hidden; }
+/* containment: horizontal rules, edge to edge, with tick marks at the container */
+section{ border-top:1px solid var(--rail); }
+section + section{ border-top:1px solid var(--rail-2); }
 section + section::after{
-  content:""; position:absolute; top:0; height:1px; pointer-events:none;
-  left:max(calc((100% - 1324px) / 2), 14px);
-  right:max(calc((100% - 1324px) / 2), 14px);
+  content:""; position:absolute; top:-1px; left:0; right:0; height:1px; pointer-events:none;
   background:linear-gradient(90deg,
-    var(--ember-2) 0%, rgba(255,90,60,.25) 8%,
-    rgba(168,140,255,.22) 34%, rgba(168,140,255,.22) 66%,
-    rgba(89,230,255,.25) 92%, var(--cyan) 100%);
-  opacity:.55;
+    transparent 0%, var(--ember-2) 12%, rgba(255,90,60,.28) 26%,
+    rgba(168,140,255,.22) 48%, rgba(168,140,255,.22) 62%,
+    rgba(89,230,255,.34) 80%, var(--cyan) 92%, transparent 100%);
+  opacity:.95;
+  box-shadow:0 0 18px -6px rgba(255,90,60,.25);
 }
-.hero{ padding-bottom:0; }
-.hero + section::after{ opacity:.7; }
+.hero{ border-top:0; }
 .sechead{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.86fr); gap:var(--s-5); align-items:end; margin-bottom:var(--s-6); }
 @media (max-width:880px){ .sechead{ grid-template-columns:1fr; gap:14px; } }
 .sechead p{ color:var(--muted); max-width:38ch; }
@@ -288,7 +279,7 @@ section + section::after{
 @media (max-width:600px){ .bundle{ grid-template-columns:1fr; } }
 
 .bcard{
-  position:relative; display:flex; flex-direction:column; padding:22px 20px 20px; border:1px solid rgba(168,140,255,.18);
+  position:relative; display:flex; flex-direction:column; padding:22px 20px 20px; border:1px solid rgba(196,178,255,.24);
   border-radius:var(--r-lg); background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
   transition:border-color .2s, transform .2s, background .2s;
 }
@@ -331,13 +322,57 @@ section + section::after{
 .prow b{ font-weight:500; font-size:.92rem; }
 .prow span.d{ margin-left:auto; font-family:var(--mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--violet); }
 .prow.accent{ border-color:rgba(89,230,255,.42); box-shadow:0 0 0 1px rgba(89,230,255,.10) inset, 0 18px 40px -30px rgba(89,230,255,.8); }
+
+/* process zigzag ---------------------------------------------------- */
+.zig{ position:relative; display:grid; gap:6px; margin-top:10px; }
+.zig::before{
+  content:""; position:absolute; left:50%; top:8px; bottom:8px; width:1px; transform:translateX(-.5px);
+  background:linear-gradient(180deg, transparent, var(--ember-2) 4%, var(--violet) 42%, var(--cyan) 92%, transparent);
+  opacity:.45;
+}
+.zrow{ position:relative; display:grid; grid-template-columns:1fr 1fr; column-gap:72px; }
+.zrow .zcard{ grid-column:1; }
+.zrow.right .zcard{ grid-column:2; }
+.zrow::after{
+  content:""; position:absolute; left:50%; top:42px; width:9px; height:9px; transform:translateX(-50%) rotate(45deg);
+  background:var(--deep); border:1px solid var(--violet); box-shadow:0 0 16px rgba(154,108,255,.55);
+}
+.zrow:nth-child(odd)::after{ border-color:var(--ember-2); box-shadow:0 0 16px rgba(255,90,60,.55); }
+
+.zcard{
+  position:relative; overflow:hidden; padding:26px 28px 26px; border:1px solid var(--hairline);
+  border-radius:var(--r-lg); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012));
+  transition:border-color .22s, transform .22s, box-shadow .22s;
+}
+.zcard:hover{ transform:translateY(-2px); border-color:var(--hairline-2); box-shadow:0 26px 60px -40px rgba(0,0,0,.9); }
+.zcard .gnum{
+  position:absolute; right:18px; top:2px; font-family:var(--display); font-size:4.2rem; line-height:1;
+  font-weight:600; letter-spacing:-.05em; color:rgba(255,255,255,.045); pointer-events:none;
+}
+.zcard .kick{ font-family:var(--mono); font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ember-3); }
+.zcard h3{ margin-top:10px; font-size:1.12rem; line-height:1.3; }
+.zcard p{ margin-top:10px; color:var(--muted); font-size:.9rem; line-height:1.62; }
+.zcard .zmeta{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+.zcard .zmeta span{
+  font-family:var(--mono); font-size:.56rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2);
+  border:1px solid rgba(168,140,255,.18); border-radius:999px; padding:4px 9px;
+}
+@media (max-width:900px){
+  .zig::before{ left:14px; }
+  .zrow{ grid-template-columns:1fr; column-gap:0; padding-left:40px; }
+  .zrow .zcard, .zrow.right .zcard{ grid-column:1; }
+  .zrow::after{ left:14px; top:34px; }
+  .zcard{ padding:22px; }
+  .zcard .gnum{ font-size:3rem; }
+}
+
 /* included grid ---------------------------------------------------- */
 .incgrid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 @media (max-width:980px){ .incgrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:620px){ .incgrid{ grid-template-columns:1fr; } }
 .inc{
   position:relative; padding:20px 18px 18px; border-radius:var(--r-md);
-  border:1px solid rgba(168,140,255,.16);
+  border:1px solid rgba(196,178,255,.24);
   background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.008));
   transition:border-color .22s, box-shadow .22s, transform .22s;
 }
@@ -441,7 +476,8 @@ section + section::after{
 .sparks{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
 .spark{
   position:absolute; width:3px; height:3px; border-radius:50%; opacity:0;
-  background:radial-gradient(circle, #ffe6cf 0%, var(--ember-2) 55%, rgba(255,90,60,0) 72%);
+  background:radial-gradient(circle, #fff2e2 0%, #ffb27a 38%, var(--ember-2) 62%, rgba(255,90,60,0) 78%);
+  box-shadow:0 0 10px rgba(255,110,60,.55);
   animation:rise linear infinite;
 }
 @keyframes rise{
@@ -449,16 +485,6 @@ section + section::after{
   8%   { opacity:.95 }
   60%  { opacity:.55 }
   100% { transform:translate3d(14px,-160px,0) scale(1.15); opacity:0 }
-}
-.streak{
-  position:absolute; height:2px; width:240px; border-radius:2px; opacity:.0;
-  background:linear-gradient(90deg, transparent, var(--ember-2), var(--pink), transparent);
-  filter:blur(2px); animation:drift 14s ease-in-out infinite;
-}
-@keyframes drift{
-  0%,100% { opacity:0; transform:translateX(-30px) rotate(-16deg) }
-  35%     { opacity:.32 }
-  65%     { opacity:.18 }
 }
 
 /* chat widget ------------------------------------------------------ */
@@ -535,7 +561,7 @@ section + section::after{
 .cat{ display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:10px; }
 .app{
   display:flex; align-items:center; gap:12px; padding:14px 15px;
-  border:1px solid rgba(168,140,255,.16); border-radius:var(--r-md);
+  border:1px solid rgba(196,178,255,.22); border-radius:var(--r-md);
   background:rgba(255,255,255,.022); transition:border-color .2s, background .2s, transform .2s;
 }
 .app:hover{ border-color:var(--hairline-2); background:rgba(154,108,255,.07); transform:translateY(-1px); }
@@ -551,7 +577,7 @@ section + section::after{
 @media (max-width:600px){ .plans{ grid-template-columns:1fr; } }
 .plan{
   display:flex; flex-direction:column; gap:2px; padding:24px 22px 22px;
-  border:1px solid rgba(168,140,255,.16); border-radius:var(--r-lg);
+  border:1px solid rgba(196,178,255,.24); border-radius:var(--r-lg);
   background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
   position:relative;
 }
@@ -589,7 +615,7 @@ section + section::after{
 /* partners -------------------------------------------------------- */
 .partners{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:16px; }
 @media (max-width:880px){ .partners{ grid-template-columns:1fr; } }
-.pcard{ border:1px solid var(--hairline); border-radius:var(--r-lg); padding:clamp(22px,3vw,34px); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); }
+.pcard{ border:1px solid var(--hairline-2); border-radius:var(--r-lg); padding:clamp(22px,3vw,34px); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); }
 .pcard.alt{ background:linear-gradient(180deg, rgba(255,83,214,.09), rgba(154,108,255,.05)); border-color:rgba(255,83,214,.28); }
 .pcard .big{ font-family:var(--display); font-size:2.9rem; line-height:1; letter-spacing:-.04em; margin:10px 0 6px; }
 .pcard .big em{ font-style:normal; font-size:1rem; color:var(--muted); letter-spacing:0; }
@@ -634,8 +660,11 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
   .wrap{ width:min(100% - 34px, var(--maxw)); }
   .brand-name span{ display:none; }
   header{ background:rgba(6,7,32,.95); }
+  .chat-fab{ width:52px; padding:0; font-size:0; justify-content:center; border-radius:50%; }
+  .chat-fab svg{ width:20px; height:20px; }
   .nav{ height:62px; gap:12px; }
-  .nav > .btn{ min-height:40px; padding:0 16px; font-size:.85rem; }
+  .nav > .btn{ min-height:40px; padding:0 14px; font-size:.82rem; }
+  .sechead{ margin-bottom:30px; }
   .pipe{ display:none; }
   .scene-shell{ aspect-ratio: 1 / .68; min-height:220px; margin-top:6px; }
   .hero{ padding-top:16px; }
@@ -1026,52 +1055,62 @@ body{ overflow-x:clip; }
           domain, vault, monitoring — and stay responsible for it, including the parts that break at 3am.</p>
       </div>
 
-      <div class="flow">
-        <div class="fstep">
-          <div class="fnum">01</div>
-          <div>
-            <div class="tagline">Host</div>
+      <div class="zig">
+        <div class="zrow">
+          <div class="zcard">
+            <span class="gnum">01</span>
+            <span class="kick">Host</span>
             <h3>Your instance exists before you've finished signing up.</h3>
             <p>Pay, and a box is cloned for you from our golden image: operating system, database, TLS,
               Vaultwarden, monitoring, backups and the desktop UI. Nothing to install, nothing to configure,
               nothing to look up in a wiki.</p>
+            <div class="zmeta"><span>~60s to boot</span><span>golden image</span><span>zero config</span></div>
           </div>
         </div>
-        <div class="fstep">
-          <div class="fnum">02</div>
-          <div>
-            <div class="tagline">Build</div>
+
+        <div class="zrow right">
+          <div class="zcard">
+            <span class="gnum">02</span>
+            <span class="kick">Build</span>
             <h3>Torchflow, the catalog, or the project you already have.</h3>
             <p>Describe an app in plain English and Torchflow assembles it — dashboard, portal, internal tool,
               Telegram bot. Or pick a supported app from the catalog. Or hand us the repo and we containerise
               and migrate it as a fixed-price setup.</p>
+            <div class="zmeta"><span>no code</span><span>catalog apps</span><span>BYO repo</span></div>
           </div>
         </div>
-        <div class="fstep">
-          <div class="fnum">03</div>
-          <div>
-            <div class="tagline">Review</div>
+
+        <div class="zrow">
+          <div class="zcard">
+            <span class="gnum">03</span>
+            <span class="kick">Review</span>
             <h3>Staging on a real domain before anything is public.</h3>
             <p>Every deploy lands on a preview URL with a real certificate. Click through it, show the client,
               break it on purpose. Promote only when you're happy.</p>
+            <div class="zmeta"><span>preview URL</span><span>real TLS</span><span>client-ready</span></div>
           </div>
         </div>
-        <div class="fstep">
-          <div class="fnum">04</div>
-          <div>
-            <div class="tagline">Deploy</div>
+
+        <div class="zrow right">
+          <div class="zcard">
+            <span class="gnum">04</span>
+            <span class="kick">Deploy</span>
             <h3>One click to your domain, or ours.</h3>
             <p>Promotion swaps traffic, keeps the previous release for instant rollback, and issues TLS. You
               never touch a server, a firewall rule or a certbot log.</p>
+            <div class="zmeta"><span>instant rollback</span><span>custom domain</span><span>no certbot</span></div>
           </div>
         </div>
-        <div class="fstep">
-          <div class="fnum">05</div>
-          <div>
-            <div class="tagline">Operate</div>
+
+        <div class="zrow">
+          <div class="zcard">
+            <span class="gnum">05</span>
+            <span class="kick">Operate</span>
             <h3>We watch it, patch it, back it up and answer for it.</h3>
-            <p>Nightly encrypted backups, uptime and resource checks, dependency updates, and the Torchflow Agent on
-              the instance doing the first pass. If the box degrades, we see it before your customers do.</p>
+            <p>Nightly encrypted backups, uptime and resource checks, dependency updates, and the Torchflow
+              Agent on the instance doing the first pass. If the box degrades, we see it before your customers
+              do.</p>
+            <div class="zmeta"><span>nightly backups</span><span>patching</span><span>agent on call</span></div>
           </div>
         </div>
       </div>
@@ -1963,7 +2002,7 @@ body{ overflow-x:clip; }
   const host = document.getElementById('sparks');
   if (!host) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const n = window.innerWidth < 800 ? 10 : 22;
+  const n = window.innerWidth < 800 ? 12 : 26;
   for (let i = 0; i < n; i++) {
     const el = document.createElement('span');
     el.className = 'spark';
@@ -1971,19 +2010,10 @@ body{ overflow-x:clip; }
     el.style.top = (55 + Math.random() * 45).toFixed(2) + '%';
     el.style.animationDuration = (7 + Math.random() * 9).toFixed(1) + 's';
     el.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
-    const sc = (0.6 + Math.random() * 1.1).toFixed(2);
-    el.style.width = el.style.height = (2.5 * sc).toFixed(1) + 'px';
+    const sc = (0.9 + Math.random() * 1.2).toFixed(2);
+    el.style.width = el.style.height = (5.4 * sc).toFixed(1) + 'px';
     host.appendChild(el);
   }
-  const streaks = [[12, 32, 0], [78, 62, 5], [46, 88, 9]];
-  streaks.forEach(([x, y, d]) => {
-    const el = document.createElement('span');
-    el.className = 'streak';
-    el.style.left = x + '%';
-    el.style.top = y + '%';
-    el.style.animationDelay = d + 's';
-    host.appendChild(el);
-  });
 })();
 
 /* support chat */
