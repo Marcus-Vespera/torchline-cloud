@@ -202,6 +202,15 @@ header{
 }
 .hero .lede{ margin-top:20px; max-width:31rem; }
 .cta-row{ display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.hero-list{ list-style:none; margin:22px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; }
+@media (max-width:520px){ .hero-list{ grid-template-columns:1fr; } }
+.hero-list li{ display:flex; align-items:flex-start; gap:10px; font-size:.9rem; }
+.hero-list li::before{
+  content:""; width:6px; height:6px; border-radius:50%; margin-top:7px; flex:0 0 auto;
+  background:linear-gradient(180deg,var(--cyan),var(--violet)); box-shadow:0 0 10px rgba(89,230,255,.55);
+}
+.hero-list b{ display:block; font-weight:500; color:var(--ink); letter-spacing:-.01em; }
+.hero-list span{ display:block; color:var(--muted); font-size:.8rem; }
 .trust{
   display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:26px;
   font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
@@ -634,9 +643,14 @@ footer{ border-top:1px solid rgba(168,140,255,.14); padding:44px 0 60px; color:v
       <div class="hero-copy">
         <span class="eyebrow">Torchline Cloud · managed hosting</span>
         <h1>Deploy it.<br><span class="hot">We'll run it.</span></h1>
-        <p class="lede">Host the apps your business actually runs on. One instance brings the whole stack with
-          it — the Torchflow builder, the agent team, DNS, a password vault and monitoring. Build it, review
-          it, deploy it; we take over the servers, the updates and the backups.</p>
+        <p class="lede">Host the apps your business actually runs on — and let somebody else run the servers,
+          the updates and the backups for once.</p>
+        <ul class="hero-list">
+          <li><div><b>Torchflow.AI</b><span>App builder</span></div></li>
+          <li><div><b>Hermes</b><span>Autonomous AI agent</span></div></li>
+          <li><div><b>Coolify + Docker</b><span>Deployment</span></div></li>
+          <li><div><b>Numerous apps &amp; tools</b><span>Custom catalog</span></div></li>
+        </ul>
         <div class="cta-row">
           <a class="btn btn-primary" href="#pricing">Deploy in ~15 minutes</a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
